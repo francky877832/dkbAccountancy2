@@ -1,0 +1,30 @@
+ <CheckBox title=
+                                                    {
+                                                    <View style={[{}]}>
+                                                    <Pressable style={[radioProductStyles.productInfos,{ }]} onPress={()=>{navigation.navigate('ProductDetails', {productDetails:product2})}}>
+                                                        <View style={{width:10}}></View>
+                                                        <View style={[radioProductStyles.imageContainer,{}]}>
+                                                            <Image source={{uri: product2.images[0]}} style={[radioProductStyles.productImage,{}]} />
+                                                        </View>
+                                                        <View style={[{left : 10, flexWrap:'wrap', width:'100%', }]}>
+                                                            <Text style={[customText.text, ]} numberOfLines={2} >{product2.name.length>25?product2.name.substring(0,25)+'...':product2.name}</Text>
+                                                            <Text style={[customText.text, {color:appColors.secondaryColor3} ]}>{product2.category.replace(/\//g, ' | ')}</Text> 
+                                                            <Text style={[customText.text, {top:10,fontWeight:"bold"}]}>{formatMoney(product2.price)} XAF{/* prix de la proposition ou real Price*/}</Text>
+                                                            <Text style={[customText.text, {top:10, fontSize:12, fontWeight:"bold"} ]} numberOfLines={2} >Stock Restant : {product2.stock}</Text>
+                                                        </View>
+                                                    </Pressable>    
+                                                    <View style={[{height:5}]}></View>
+                                                        <View style={[radioProductStyles.inBasketQuantity]}>
+                                                            <Counter id={product2._id} number={quantities[product2._id]} quantities={quantities} dispatch={dispatch} setNumber={updateQuantities} limit={product2.stock} />
+                                                            <Pressable onPress={()=>{handleRemoveFromBasket(product2);}} style={[radioProductStyles.trash]}>
+                                                                <Icon name="trash-outline" color={appColors.red} size={24} type="ionicon" style={[{/*alignSelf:"flex-end"*/}]} />
+                                                            </Pressable>
+                                                        </View>
+                                                    </View>
+                                                } 
+                                                containerStyle={[radioProductStyles.checkBoxContainer,{}]} 
+                                                textStyle={[customText.text,radioProductStyles.checkBoxText]} 
+                                                checked={selectedSeller==product2.seller._id && selectedProducts[product2._id]} 
+                                                onPress={() => {selectedSeller==product2.seller._id ? handleUpdateSelectedProducts(product2) : Alert.alert("Infos","Veillez d'abord selectionner le vendeur adéquat.") }} 
+                                            
+                                                />
