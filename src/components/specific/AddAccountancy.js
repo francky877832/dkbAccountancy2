@@ -21,14 +21,14 @@ const AddAccountancy = (props) => {
     const [checkoutReason, setCheckoutReason] = useState("")
     const [amount, setAmount] = useState(0)
     const [billNo, setBillNo] = useState("")
-    const [receivedBy, setReceivedBy] = useState()
+    const [receivedBy, setReceivedBy] = useState("")
     const [cashBalance, setCashBalance] = useState("")
 
 
     const [checkoutReasonFocused, setCheckoutReasonFocused] = useState(false)
     const [amountFocused, setAmountFocused] = useState(false)
     const [billNoFocused, setBillNoFocused] = useState(false)
-    const [receivedByFocused, setReceivedByFocused] = useState(user.username)
+    const [receivedByFocused, setReceivedByFocused] = useState(false)
     const [cashBalanceFocused, setCashBalanceFocused] = useState(false)
 
 
@@ -176,7 +176,7 @@ const AddAccountancy = (props) => {
                 <View style={[addAccountancyStyles.contents]}>
                     <View style={{width:10,}}></View>
                     <View>
-                        <Input placeholder={user.cashBalance} value={user.cashBalance} onChangeText={(name)=>{setCashBalance(name)}}
+                        <Input placeholder="Balance" value={user.cashBalance} onChangeText={(name)=>{setCashBalance(name)}}
                             inputMode='text'
                             multiline={false}
                             readOnly={true}

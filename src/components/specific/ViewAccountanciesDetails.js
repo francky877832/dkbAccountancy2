@@ -27,12 +27,7 @@ const ViewAccountanciesDetails = (props) => {
         const { item, index } = props
         return (
             <View style={[viewAccountanciesDetailsStyles.container]}>
-                <View style={[viewAccountanciesDetailsStyles.line]}>
-                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Date</Text>
-                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Reason</Text>
-                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Bill</Text>
-                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Balance</Text>
-                </View>
+                
     {/*
                 <View style={[viewAccountanciesDetailsStyles.subTitle]}>
                     <Text style={[viewAccountanciesDetailsStyles.subTitleText]}>Semaine Du / AU /</Text>
@@ -67,6 +62,7 @@ const ViewAccountanciesDetails = (props) => {
 
     return (
         <View style={[viewAccountanciesDetailsStyles.container]}>
+
             <FlatList
                     data={accountancies}
                     renderItem={ ({item, index}) => { 
@@ -77,6 +73,16 @@ const ViewAccountanciesDetails = (props) => {
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}
                     contentContainerStyle={[viewAccountanciesDetailsStyles.flatlist]}
+                    ListHeaderComponent={() => {
+                        return (
+                            <View style={[viewAccountanciesDetailsStyles.line]}>
+                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Date</Text>
+                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Reason</Text>
+                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Bill</Text>
+                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Balance</Text>
+                            </View>
+                        )
+                    }}
                     ListEmptyComponent={() => {}}
             />
         </View>
