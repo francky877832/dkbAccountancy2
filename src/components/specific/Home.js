@@ -1,9 +1,10 @@
 import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView} from 'react-native';
+import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, Image} from 'react-native';
 
 import { appColors, customText} from '../../styles/commonStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
+import { cardContainer } from '../user/userLoginStyles';
 const Home = (props) => {
     //console.log('ok--')
     //On va afficher home en fonciton de admin role
@@ -11,20 +12,28 @@ const Home = (props) => {
     const route = useRoute()
     return (
         <View style={[homeStyles.container]}>
-            <Pressable  style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('ViewAccountancies') }}>
-                <Text style={[customText.text, homeStyles.menuText ]}>Visualiser</Text>
-            </Pressable>
 
-            <Pressable style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('AddAccountancy') }}>
-                <Text style={[customText.text, homeStyles.menuText ]}>Ajouter</Text>
-            </Pressable>
+            <View style={[homeStyles.logoBox]}>
+                <Image source={require('../../assets/logos/logo1.jpg')}  style={[homeStyles.logoImage]}/>
+            </View>
 
-            {
-                 <Pressable style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('SupplyFunds') }}>
-                    <Text style={[customText.text, homeStyles.menuText ]}>Approvisionnement</Text>
+            <View style={{height:10}}></View>
+
+            <View style={[homeStyles.infoContainer]}>
+                <Pressable  style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('ViewAccountancies') }}>
+                    <Text style={[customText.text, homeStyles.menuText ]}>Visualiser</Text>
                 </Pressable>
-            }
 
+                <Pressable style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('AddAccountancy') }}>
+                    <Text style={[customText.text, homeStyles.menuText ]}>Ajouter</Text>
+                </Pressable>
+
+                {
+                    <Pressable style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('SupplyFunds') }}>
+                        <Text style={[customText.text, homeStyles.menuText ]}>Approvisionnement</Text>
+                    </Pressable>
+                }
+            </View>
         </View>
     )
 }
@@ -38,15 +47,41 @@ const homeStyles = StyleSheet.create({
         flex : 1,
         justifyContent : 'center',
         alignItems : 'center',
-        //backgroundColor : 'red',
+    },
+    logoBox : 
+    {
+        height : 300,
+       width : '100%',
+       justifyContent : 'center',
+        alignItems : 'center',
+    },
+    logoImage :
+    {
+        height : '100%',
+        width : '90%'
+    },
+    infoContainer :
+    {
+        ...cardContainer,
+        justifyContent : 'center',
+        alignItems : 'center',
+        width  : '100%',
     },
     menuButton :
     {
         padding : 20,
-        borderRadius : 10
+        borderRadius : 10,
+        borderWidth : 1,
+        borderColor : appColors.lightWhite,
+        width : '100%',
+        alignItems : 'center',
+        marginTop : 5,
+        backgroundColor : appColors.blue,
     },
     menuText :
     {
-        fontWeight : 'bold'
+        fontWeight : 'bold',
+        fontSize : 16,
+        color : appColors.white,
     },
 })

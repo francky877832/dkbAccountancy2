@@ -3,6 +3,30 @@ import { appColors, appFont, screenWidth, customText, inputTextStyle, screenHeig
 
 import { productStyles } from "../../styles/productStyles";
 
+
+export const cardContainer = {
+    position : 'relative',
+    justifyContent : 'center',
+    alignSelf : 'center',
+    left : 0,
+    right : 0,
+    //top : screenHeight/5,
+    //height : 300,
+    backgroundColor : appColors.white,
+    paddingHorizontal : 30,
+    zIndex : 100,
+  
+     // Ombre sur iOS
+    shadowColor: appColors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    // Ombre sur Android
+    elevation: 10,
+    borderRadius: 10,
+    paddingVertical : 30,
+}
+
 export const userLoginStyles = StyleSheet.create({
     container :
     {
@@ -50,27 +74,8 @@ export const userLoginStyles = StyleSheet.create({
     },
     infoContainer :
     {
-        //flexGrow : 1,
+        ...cardContainer,
         position : 'absolute',
-        justifyContent : 'center',
-        alignSelf : 'center',
-        left : 0,
-        right : 0,
-        //top : screenHeight/5,
-        //height : 300,
-        backgroundColor : appColors.white,
-        paddingHorizontal : 30,
-        zIndex : 100,
-      
-         // Ombre sur iOS
-        shadowColor: appColors.black,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        // Ombre sur Android
-        elevation: 10,
-        borderRadius: 10,
-        paddingVertical : 30,
     },
 
     credentialContainers :

@@ -5,7 +5,7 @@ export const screenHeight = screen.height
 
 export const appColors = {
     mainColor : "#F0F0F0",
-    secondaryColor1 : "#f27a1a",
+    secondaryColor1 : "blue", //rgb(32, 137, 220)
     lightOrange : "rgba(242, 122, 26, 0.1)",
     lightOrange2 : "rgba(242, 122, 26, 0.04)",
     lightOrange3 : "rgba(242, 122, 26, 1)",

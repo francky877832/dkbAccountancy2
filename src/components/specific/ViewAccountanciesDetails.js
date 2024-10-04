@@ -1,16 +1,25 @@
 import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, FlatList} from 'react-native';
 
+import { Input } from 'react-native-elements';
+import { Picker } from '@react-native-picker/picker';
 
-import { appColors, customText } from '../../styles/commonStyles';
+import { appColors, customText, screenWidth } from '../../styles/commonStyles';
 import { useNavigation } from '@react-navigation/native';
 import { AccountancyContext } from '../../context/AccountancyContext';
+
+import { supplyFundsStyles } from './SupplyFunds';
+import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
+import { searchBarStyles } from '../../styles/searchBarStyles';
+import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
+import { formatMoney, getDate, isValidDate } from '../../utils/commonAppFonctions'
+import { cardContainer } from '../user/userLoginStyles';
 
 
 const ViewAccountanciesDetails = (props) => {
 
     const navigation = useNavigation()
-    const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading} = useContext(AccountancyContext)
+    const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading, getSearchedAccountancies} = useContext(AccountancyContext)
     //On va afficher home en fonciton de admin role
 
 
@@ -22,52 +31,127 @@ const ViewAccountanciesDetails = (props) => {
             fetchData()
     }, [])
 
-
     const RenderAccount = (props) => {
         const { item, index } = props
+        console.log(item)
+
         return (
-            <View style={[viewAccountanciesDetailsStyles.container]}>
-                
-    {/*
-                <View style={[viewAccountanciesDetailsStyles.subTitle]}>
-                    <Text style={[viewAccountanciesDetailsStyles.subTitleText]}>Semaine Du / AU /</Text>
-                </View>
-    */}
+   
 
-                <View style={[viewAccountanciesDetailsStyles.record, {backgroundColor:item?.type=='income' ? appColors.lightGreen : appColors.lightRed }]}>
-                    <View style={[viewAccountanciesDetailsStyles.recordItem]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}></Text>
+                <View style={[viewAccountanciesDetailsStyles.line, {backgroundColor:item?.type=='income' ? appColors.lightGreen : appColors.lightRed }]}>
+                    <View style={[viewAccountanciesDetailsStyles.cell]}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.date}</Text>
                     </View>
 
-                    <View style={[viewAccountanciesDetailsStyles.recordItem]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}></Text>
+                    <View style={[viewAccountanciesDetailsStyles.cell]}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.reason}</Text>
                     </View>
 
-                    <View style={[viewAccountanciesDetailsStyles.recordItem]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}></Text>
+                    <View style={[viewAccountanciesDetailsStyles.cell]}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=='income'?"+":"-"} {item?.amount}</Text>
                     </View>
-                    <View style={[viewAccountanciesDetailsStyles.recordItem]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}></Text>
+
+                    <View style={[viewAccountanciesDetailsStyles.cell]}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.billNo}</Text>
+                    </View>
+                    <View style={[viewAccountanciesDetailsStyles.cell]}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.cashBalance}</Text>
                     </View>
                 </View>
-
-
-
-
                 
-            </View>
         )
     }
 
+    const [selectedDate, setSelectedDate] = useState("Day")
+    const [date, setDate] = useState(getDate())
+    const [dateFocused, setDateFocused] = useState(false)
+    const [isPostLoading, setIsPostLoading] = useState(false)
+    const [showSearch, setShowSearch] = useState(false)
+
+    const searchedAccountancies = async () => {
+        try
+        {
+            setIsPostLoading(true)
+            const date_ = selectedDate.toLowerCase() ==='day' ? date : '01/'+date
+            console.log(date_)
+
+            if(!isValidDate(date_))
+            {
+                Alert.alert('Date Error', 'Entrez une date valide, au format JJ pour day et JJ/MM pour month')
+                return;
+            }
+            
+            
+            await getSearchedAccountancies(date)
+
+        }
+        catch(error)
+        {
+            console.log(error)
+            Alert.alert('Error', 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.')
+        }finally {
+            setIsPostLoading(false)
+        }
+    }
 
     return (
-        <View style={[viewAccountanciesDetailsStyles.container]}>
+        <ScrollView horizontal={true} contentContainerStyle={[viewAccountanciesDetailsStyles.container]}>
 
+        <View style={[{flex:1}]}>
+            <View style={[viewAccountanciesDetailsStyles.topSearch]}>
+                <Pressable style={[viewAccountanciesDetailsStyles.searchButton, {alignItems:'center', backgroundColor:!showSearch?appColors.green:appColors.red}]} onPress={()=>{setShowSearch(prev=>!prev)}}>
+                    <Text style={[customText.text, {color:appColors.white, fontWeight:'bold'}]}>{!showSearch ? "Chercher" : "Fermer"}</Text>
+                </Pressable>
+            {showSearch &&
+                <>
+                    <View style={[viewAccountanciesDetailsStyles.topElInput,{}]}>
+                        <Input placeholder="Date" value={date} onChangeText={(name)=>{setDate(name)}}
+                                inputMode='text'
+                                multiline={false}
+                                readOnly={false}
+                                maxLength={100}
+                                placeholderTextColor={appColors.secondaryColor3}
+                                inputStyle = {[searchBarStyles.inputText, ]}
+                                onFocus={() => setDateFocused(true)}
+                                onBlur={() => setDateFocused(false)}
+                                underlineColorAndroid='transparent'
+                                containerStyle={ [viewAccountanciesDetailsStyles.containerBox,]}
+                                inputContainerStyle = {[searchBarStyles.inputContainer, dateFocused && searchBarStyles.inputContainerFocused,  viewAccountanciesDetailsStyles.inputContainer,
+                                ]}
+                        />
+                    </View>
+
+                    <View style={{width:10}}></View>
+
+                    <View style={[viewAccountanciesDetailsStyles.topEl,{}]}>
+                        <Picker
+                            selectedValue={selectedDate}
+                            style={[viewAccountanciesDetailsStyles.picker]}
+                            onValueChange={(itemValue, itemIndex) => setSelectedDate(itemValue)}
+                            >
+                            {['Day', 'Month'].map((item, index) => (
+                                <Picker.Item key={index} label={item} value={item} />
+                            ))}
+                        </Picker>
+                    </View>
+                            
+                        <View style={{width:10}}></View>
+
+                        <View style={[viewAccountanciesDetailsStyles.topEl,{}]}>
+                            <CustomButton text="Filtrer" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={viewAccountanciesDetailsStyles} onPress={()=>{searchedAccountancies()}} />
+                        </View>
+                </>
+            }
+            </View>
+
+            
+
+       
             <FlatList
                     data={accountancies}
                     renderItem={ ({item, index}) => { 
                         return(
-                            <RenderAccount account={item} index={index} />
+                            <RenderAccount item={item} index={index} />
                         ) 
                     } }
                     keyExtractor={ (item) => { return item._id.toString(); } }
@@ -76,16 +160,52 @@ const ViewAccountanciesDetails = (props) => {
                     ListHeaderComponent={() => {
                         return (
                             <View style={[viewAccountanciesDetailsStyles.line]}>
-                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Date</Text>
-                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Reason</Text>
-                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Bill</Text>
-                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Balance</Text>
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Date</Text>
+                                </View>
+
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Reason</Text>
+                                </View>
+
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Amount</Text>
+                                </View>
+
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Bill</Text>
+                                </View>
+
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Balance</Text>
+                                </View>
                             </View>
                         )
                     }}
-                    ListEmptyComponent={() => {}}
+                    ListFooterComponent={() => {
+                      
+                    }}
+                    ListEmptyComponent={ () => {
+                        return (
+                            <View style={[{width:screenWidth, justifyContent:'center', alignItems:'center'}]}>
+                                <Text style={[viewAccountanciesDetailsStyles.titleText]}>Pas de donnees</Text>
+                            </View>
+                        )
+                    }}
             />
+
+           
+
+
+            
+     <View style={{hieght:10}}></View>
+
+
+            
+
+            <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
         </View>
+    </ScrollView>
     )
 }
 
@@ -95,8 +215,44 @@ export default ViewAccountanciesDetails
 const viewAccountanciesDetailsStyles = StyleSheet.create({
     container :
     {
-
+        flexGrow : 1,
+        //paddingHorizontal : 10,
     },
+    searchButton :
+    {
+        padding : 10,
+    },
+    topSearch :
+    {
+        //flexDirection : 'row',
+        //justifyContent : 'space-around',
+        //alignItems : 'center',
+        width : screenWidth,
+        backgroundColor : appColors.white,
+        //height : 60,
+    }, 
+    topSearchEl : 
+    {
+        //width : screenWidth/4,
+    },
+    inputContainer :
+    {
+        width : '100%',
+        borderRadius : 0,
+        borderWidth : 0,
+        borderBottom : 1,
+        padding : 0
+    },
+    containerBox :
+    {
+        backgroundColor : appColors.white,
+    },
+    picker :
+    {
+        padding : 10,
+    },
+
+
     line : 
     {
         flexDirection : 'row',
@@ -107,9 +263,14 @@ const viewAccountanciesDetailsStyles = StyleSheet.create({
         flexDirection : 'row',
         justifyContent : 'space-between',
     },
-    recordItem :
+    cell :
     {
-        
+        width : 200,
+        height : 30,
+        borderRightWidth : 1,
+        borderColor : appColors.white,
+        justifyContent :'center',
+        alignItems : 'center',
     },
     subTitle :
     {
@@ -123,10 +284,17 @@ const viewAccountanciesDetailsStyles = StyleSheet.create({
 
     titleText :
     {
-
+        color : appColors.secondaryColor5,
+        fontWeight : 'bold',
+        fontSize : 15,
     },
     recordItemText :
     {
         color : appColors.secondaryColor5,
+    },
+
+    pressable :
+    {
+        padding : 20,
     }
 })

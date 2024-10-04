@@ -14,6 +14,7 @@ import { formatMoney } from '../../utils/commonAppFonctions'
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
 import { AccountancyContext } from '../../context/AccountancyContext';
 import { UserContext } from '../../context/UserContext';
+import { cardContainer } from '../user/userLoginStyles';
 
 const SupplyFunds = (props) => {
     //console.log('ok--')
@@ -75,65 +76,75 @@ const SupplyFunds = (props) => {
 
     return (
         <View style={[supplyFundsStyles.container]}>
-            <View style={[supplyFundsStyles.contents]}>
-                    <View style={[supplyFundsStyles.title]}>
-                        <Text style={[supplyFundsStyles.titleText]}>Montant</Text>
-                    </View>
+            <View style={[supplyFundsStyles.infoContainer]}>
+                <View style={[supplyFundsStyles.contents]}>
+                        <View style={[supplyFundsStyles.title]}>
+                            <Text style={[supplyFundsStyles.titleText]}>Montant</Text>
+                        </View>
 
-                    <View style={{height:10,}}></View>
-                        <Input placeholder="Montant" value={formatMoney(amount)} onChangeText={(price)=>{setAmount(formatMoney(price))}}
-                            inputMode='numeric'
-                            multiline={false}
-                            placeholderTextColor={appColors.secondaryColor3}
-                            inputStyle = {[searchBarStyles.inputText, ]}
-                            onFocus={() => setAmountFocused(true)}
-                            onBlur={() => setAmountFocused(false)}
-                            underlineColorAndroid='transparent'
-                            inputContainerStyle = {[searchBarStyles.inputContainer, amountFocused && searchBarStyles.inputContainerFocused,  supplyFundsStyles.inputContainer]}
-                        />
-                         
-            </View> 
+                        <View style={{height:10,}}></View>
+                            <Input placeholder="9.999 XAF" value={formatMoney(amount)} onChangeText={(price)=>{setAmount(formatMoney(price))}}
+                                inputMode='numeric'
+                                multiline={false}
+                                placeholderTextColor={appColors.secondaryColor5}
+                                inputStyle = {[searchBarStyles.inputText, ]}
+                                onFocus={() => setAmountFocused(true)}
+                                onBlur={() => setAmountFocused(false)}
+                                underlineColorAndroid='transparent'
+                                containerStyle={[supplyFundsStyles.inputBox]}
+                                inputContainerStyle = {[searchBarStyles.inputContainer, amountFocused && searchBarStyles.inputContainerFocused,  supplyFundsStyles.inputContainer]}
+                            />
+                            
+                </View> 
 
-            <View  style={[supplyFundsStyles.contents]}>
-                <View style={[supplyFundsStyles.receipient]}>
-                    <View style={[supplyFundsStyles.title]}>
-                        <Text style={[supplyFundsStyles.titleText]}>Receipient</Text>
+                <View  style={[supplyFundsStyles.contents]}>
+                    <View style={[supplyFundsStyles.receipient]}>
+                        <View style={[supplyFundsStyles.title]}>
+                            <Text style={[supplyFundsStyles.titleText]}>Receipient</Text>
+                        </View>
+                        <View style={{height:10,}}></View>
+
+                        <Picker
+                            selectedValue={selectedReceipients}
+                            style={[supplyFundsStyles.picker]}
+                            onValueChange={(itemValue, itemIndex) => setSelectedReceipients(itemValue)}
+                        >
+                            {accounters.map((accounter, index) => (
+                                <Picker.Item key={index} label={accounter.email.split('@')[0]} value={accounter._id} />
+                            ))}
+                        </Picker>
                     </View>
-                    <Picker
-                        selectedValue={selectedReceipients}
-                        style={[supplyFundsStyles.picker]}
-                        onValueChange={(itemValue, itemIndex) => setSelectedReceipients(itemValue)}
-                    >
-                        {accounters.map((accounter, index) => (
-                            <Picker.Item key={index} label={accounter.email.split('@')[0]} value={accounter._id} />
-                        ))}
-                    </Picker>
                 </View>
+
+
+                <View style={{height:20}}></View>
+
+
+            <View style={[addAccountancyStyles.addProductSubmitView,{}]}>
+                    <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addAccountancyStyles} onPress={()=>{submitAccountancy()}} />
             </View>
 
-
-            <View style={{hieght:10}}></View>
-
-
-        <View style={[addAccountancyStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addAccountancyStyles} onPress={()=>{submitAccountancy()}} />
+            <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
         </View>
-
-        <CustomModalActivityIndicator onRequestClose={setIsPostLoading} isLoading={isPostLoading} size="large" color={appColors.secondaryColor1} message="Chargements des données..." />
-
-        </View>
+    </View>
     )
 }
 
 export default SupplyFunds
 
 
-const supplyFundsStyles = StyleSheet.create({
+export const supplyFundsStyles = StyleSheet.create({
     container :
     {
         flex : 1,
-        //justifyContent : 'center'
+        justifyContent : 'center',
         top : 10,
+    },
+    infoContainer :
+    {
+        ...cardContainer,
+        width  : '100%',
+
     },
     contents :
     {
@@ -144,20 +155,26 @@ const supplyFundsStyles = StyleSheet.create({
         borderRadius : 0,
         borderWidth : 0,
         borderBottom : 1,
-        padding : 0
+        padding : 0,
+        left : 0,
+        width : '100%',
+        
+    },
+    inputBox :
+    {
+        backgroundColor : appColors.white,
     },
     picker: 
     {
-        
-        //height: 50,
-        //width: 200,
-        
+        padding : 10,
+        width: '100%',
         backgroundColor: appColors.white,
         
     },
     titleText :
     {
-        //color : 'red',
+        fontWeight : 'bold',
+        fontSize : 16,
     }
     
 })

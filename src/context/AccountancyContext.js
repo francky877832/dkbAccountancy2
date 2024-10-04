@@ -43,6 +43,43 @@ const AccountancyProvider = ({children}) => {
         }
 
     }
+
+
+    const getSearchedAccountancies = async (date) => {
+        const datas = {
+            date
+        }
+
+        try
+        {
+            setIsLoading(true)
+            const response = await fetch(`${server}/api/datas/accountancy/accountancies/search?date=${encodeURIComponent(date)}`, {
+                method: 'GET',
+                headers : {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            if(!response)
+            {
+                throw new Error("Erreur reseau " + await response.text())
+            }
+            
+            const res = await response.json()
+            //console.log(res.datas[0].user)
+            setAccountancies(res.datas)
+            return res.datas
+        }
+        catch(error)
+        {
+            console.log(error)
+            return []
+        }finally{
+            setIsLoading(false)
+        }
+
+    }
+
     
     const addUserDailyAccountancy = async (user, dailyReport) => {
         try {
@@ -112,7 +149,7 @@ const AccountancyProvider = ({children}) => {
 
     const filterStateVars = {accounters, accountancies, isLoading}
     const filterStateSetters = {setAccounters, setIsLoading}
-    const utilsFunctions = {fetchAccountancies, addUserDailyAccountancy, fetchAccounters}
+    const utilsFunctions = {fetchAccountancies, getSearchedAccountancies, addUserDailyAccountancy, fetchAccounters}
     return (
         <AccountancyContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

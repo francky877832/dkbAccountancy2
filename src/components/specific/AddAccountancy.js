@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useRef, useEffect, useContext } from 'reac
 import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView} from 'react-native';
 import { Input } from 'react-native-elements';
 
-import { formatMoney } from '../../utils/commonAppFonctions'
+import { formatMoney, getDate, isValidDate } from '../../utils/commonAppFonctions'
 import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 import { appColors, formErrorStyle} from '../../styles/commonStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
@@ -23,6 +23,7 @@ const AddAccountancy = (props) => {
     const [billNo, setBillNo] = useState("")
     const [receivedBy, setReceivedBy] = useState("")
     const [cashBalance, setCashBalance] = useState("")
+    const [date, setDate] = useState(getDate())
 
 
     const [checkoutReasonFocused, setCheckoutReasonFocused] = useState(false)
@@ -30,6 +31,7 @@ const AddAccountancy = (props) => {
     const [billNoFocused, setBillNoFocused] = useState(false)
     const [receivedByFocused, setReceivedByFocused] = useState(false)
     const [cashBalanceFocused, setCashBalanceFocused] = useState(false)
+    const [dateFocused, setDateFocused] = useState(false)
 
 
     const [errors, setErrors] = useState({});
@@ -41,14 +43,19 @@ const AddAccountancy = (props) => {
             setIsPostLoading(true)
             setErrors({})
 
-           
-            
+            if(!isValidDate(date))
+            {
+                Alert.alert('Date Error', 'Entrez une date valide, au format JJ/MM/AA')
+                return;
+            }
+
             const report = {
                 receivedBy,
                 reason : checkoutReason,
                 amount : parseInt(amount.split('.').join('')),
                 billNo,
                 type : 'outcome',
+                date : date
             }
             const res = await addUserDailyAccountancy(user, report)
 
@@ -170,28 +177,28 @@ const AddAccountancy = (props) => {
 
             <View style={[addAccountancyStyles.containers]}>
                 <View style={[addAccountancyStyles.titles]}>
-                    <Text style={[addAccountancyStyles.titlesText]}>Montant En Caisse : </Text>
+                    <Text style={[addAccountancyStyles.titlesText]}>Date : </Text>
                 </View>
                 
                 <View style={[addAccountancyStyles.contents]}>
                     <View style={{width:10,}}></View>
                     <View>
-                        <Input placeholder="Balance" value={user.cashBalance} onChangeText={(name)=>{setCashBalance(name)}}
+                        <Input placeholder="Date de la transaction" value={date} onChangeText={(name)=>{setDate(name)}}
                             inputMode='text'
                             multiline={false}
-                            readOnly={true}
+                            readOnly={false}
                             maxLength={100}
                             placeholderTextColor={appColors.secondaryColor3}
                             inputStyle = {[searchBarStyles.inputText, ]}
-                            onFocus={() => setCashBalanceFocused(true)}
-                            onBlur={() => setCashBalanceFocused(false)}
+                            onFocus={() => setDateFocused(true)}
+                            onBlur={() => setDateFocused(false)}
                             underlineColorAndroid='transparent'
                             containerStyle={ [searchBarStyles.containerBox,]}
-                            inputContainerStyle = {[searchBarStyles.inputContainer, cashBalanceFocused && searchBarStyles.inputContainerFocused,  addAccountancyStyles.inputContainer,
+                            inputContainerStyle = {[searchBarStyles.inputContainer, dateFocused && searchBarStyles.inputContainerFocused,  addAccountancyStyles.inputContainer,
                                 {backgroundColor:appColors.lightWhite}
                             ]}
                         />
-                        {errors.name && <Text style={[formErrorStyle.text]}>{errors.cashBalance}</Text>}
+                        {errors.date && <Text style={[formErrorStyle.text]}>{errors.date}</Text>}
                     </View>
                 </View>
             </View>
@@ -203,7 +210,7 @@ const AddAccountancy = (props) => {
 
 
         <View style={[addAccountancyStyles.addProductSubmitView,{}]}>
-                <CustomButton text="Publier Le Produit" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addAccountancyStyles} onPress={()=>{submitAccountancy()}} />
+                <CustomButton text="Soumettre" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addAccountancyStyles} onPress={()=>{submitAccountancy()}} />
         </View>
 
 
