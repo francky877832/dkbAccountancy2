@@ -43,7 +43,7 @@ export default function MainNavigation() {
   <AccountancyProvider>
             
             <Stack.Navigator
-              initialRouteName="Home"
+              initialRouteName="LoaderPage"
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
             >
                 

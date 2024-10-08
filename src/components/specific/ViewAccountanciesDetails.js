@@ -5,7 +5,7 @@ import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 
 import { appColors, customText, screenWidth } from '../../styles/commonStyles';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { AccountancyContext } from '../../context/AccountancyContext';
 
 import { supplyFundsStyles } from './SupplyFunds';
@@ -19,13 +19,15 @@ import { cardContainer } from '../user/userLoginStyles';
 const ViewAccountanciesDetails = (props) => {
 
     const navigation = useNavigation()
+    const route = useRoute()
+    const {accounter} = route.params
     const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading, getSearchedAccountancies} = useContext(AccountancyContext)
     //On va afficher home en fonciton de admin role
 
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetchAccountancies()
+            await fetchAccountancies(accounter)
         }
         //if(!isLoadig)
             fetchData()

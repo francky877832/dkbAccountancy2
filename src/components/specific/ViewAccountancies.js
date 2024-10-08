@@ -18,7 +18,8 @@ const ViewAccountancies = (props) => {
 
 
     const handleAccounterPressed = (item) => {
-        navigation.navigate('ViewAccountanciesDetails', {accountancy:item})
+        //console.log(item)
+        navigation.navigate('ViewAccountanciesDetails', {accounter:item})
     }
 
 useEffect(() => {

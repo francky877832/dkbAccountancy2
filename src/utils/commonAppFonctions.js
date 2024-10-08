@@ -63,7 +63,7 @@ export const whatsappMessage = (buyer, seller, status, orderNo, group, product) 
 
 
 
-exports.sinceDate = (_date) => {
+export const sinceDate = (_date) => {
     const date2 = new Date(_date)
     const date1 = new Date()
     const date = date1.getTime() - date2.getTime()
@@ -104,17 +104,17 @@ export const truncateText = (text, numChars, clicked=false) => {
         return [text?.substring(0, numChars+1), 0, clicked]
 }
 
-exports.truncateTextAndAddDots = (text, numChars, clicked=false) => {
+export const truncateTextAndAddDots = (text, numChars, clicked=false) => {
     const data = truncateText(text, numChars, clicked)
     return data[0] + (data[1] === 1 ? "..." : "")
 }
 
-exports.displayComment = (comments) => {
+export  const displayComment = (comments) => {
     
     return true
 }
 
-exports.reshapeComments = (datas) => {
+export  const reshapeComments = (datas) => {
     let comments = [...datas]
     let newComments = []
     for(let i in comments)
@@ -146,7 +146,7 @@ exports.reshapeComments = (datas) => {
 }
 
 
-exports.formatMoney = (m) => {
+export  const formatMoney = (m) => {
     m = m || ""
     let money = [];
     let money_separator = '.'
@@ -174,7 +174,7 @@ exports.formatMoney = (m) => {
 }
 
 
-exports.countDatas = (datas) => {
+export  const countDatas = (datas) => {
     let count = 0
 
     for(let i of datas)
@@ -189,14 +189,14 @@ exports.countDatas = (datas) => {
 }
 
 
-exports.reshapeBasketProducts = (p) => {
+export  const reshapeBasketProducts = (p) => {
     const products = [...p]
 
 }
 
 
 
-const serialize = (obj, prefix) => {
+export const serialize = (obj, prefix) => {
     const str = [];
     for (const p in obj) {
       if (obj.hasOwnProperty(p)) {
@@ -215,11 +215,11 @@ const serialize = (obj, prefix) => {
     //const queryString = params.toString();
     return str.join("&");
   }
-exports.serialize = serialize
+//export  const serialize = serialize
 
 
 // Fonction pour transformer les nombres écrits en lettres en chiffres dans un texte
-exports.convertWordsToNumbers = (text) => {
+export  const convertWordsToNumbers = (text) => {
     // Utilisation de Compromise.js pour analyser le texte
         const comment = new String(text);
         //console.log(doc)
@@ -317,7 +317,7 @@ exports.convertWordsToNumbers = (text) => {
     return result; // Retourner le texte avec les nombres convertis
 }
 
-exports.containsEmail = (text) => {
+export  const containsEmail = (text) => {
     const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
     return emailRegex.test(text);
     //return text
@@ -326,7 +326,7 @@ exports.containsEmail = (text) => {
 
 
 
-exports.getSearchedProducts = async (filters, products) => {
+export  const getSearchedProducts = async (filters, products) => {
     const { name, customFilters } = filters;
     let result;
         if(!name)
@@ -457,16 +457,16 @@ export const formatLikes = (likes) => {
 
 //ORDERS
 
-exports.formatPhoneNumber = (phone) => {
+export  const formatPhoneNumber = (phone) => {
     return phone
 }
 
-exports.deFormatPhoneNumber = (phone) => {
+export  const deFormatPhoneNumber = (phone) => {
     return phone
 }
 
 
-exports.generateOrderNo = (prefixe = "CMD") => {
+export  const generateOrderNo = (prefixe = "CMD") => {
     const date = new Date();
     const annee = date.getFullYear();
     const mois = String(date.getMonth() + 1).padStart(2, '0');
@@ -484,9 +484,9 @@ export const choosePrice = (product) => {
     return product.newPrice
 }
 
-exports.choosePrice = choosePrice
+//export  const choosePrice = choosePrice
 
-exports.hasPropositionPrice = (product) => {
+export  const hasPropositionPrice = (product) => {
     //console.log(product)
     return product.hasOwnProperty('offers') && Object.keys(product?.offers)?.length>0 && product?.offers?.offers?.length>0 && product?.offers?.offers?.at(-1)?.hasGotResponse==1
 }
@@ -498,10 +498,10 @@ export const calculateTotalPrice = (products) => {
     }, 0)
     return totalPrice
 }
-exports.calculateTotalPrice = calculateTotalPrice
+//export  const calculateTotalPrice = calculateTotalPrice
 
 
-exports.formDataToJSON = (formData) => {
+export  const formDataToJSON = (formData) => {
     const jsonObject = {};
     console.log("   FORM DATAS")
     console.log(formData)
@@ -516,7 +516,7 @@ exports.formDataToJSON = (formData) => {
     return JSON.stringify(jsonObject);
   }
 
-exports.getFirebaseErrorMessage = (errorCode) => {
+export  const getFirebaseErrorMessage = (errorCode) => {
     switch (errorCode) {
       case 'auth/invalid-email':
         return "L'adresse e-mail est invalide.";
@@ -533,7 +533,7 @@ exports.getFirebaseErrorMessage = (errorCode) => {
     }
 };
 
-exports.getDate = () => {
+export  const getDate = () => {
     const today = new Date();
 
     const month = String(today.getMonth() + 1).padStart(2, '0');
@@ -544,7 +544,7 @@ exports.getDate = () => {
     return formattedDate
 }
 
-exports.isValidDate = (date) => {
+export  const isValidDate = (date) => {
 
     return date.split('/').length === 3
 }

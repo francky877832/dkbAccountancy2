@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react'
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import { serialize, formDataToJSON } from '../utils/commonAppFonctions'
 import { server } from '../remote/server'
 import * as SecureStore from 'expo-secure-store';
@@ -106,9 +106,13 @@ const UserProvider = ({children}) => {
                 const token = loggedUser.token
                 const user = loggedUser.user
                 //Mis a jour de async storage
-                //console.log(user)
-                await SecureStore.setItemAsync('authToken', token);
-                await SecureStore.setItemAsync('user', JSON.stringify({email:user.email, username:user.username, password:user.password}));
+                console.log(user)
+                if (Platform.OS != 'web')
+                {
+                    await SecureStore?.setItemAsync('authToken', token);
+                    await SecureStore?.setItemAsync('user', JSON.stringify({email:user.email, username:user.username, password:user.password}));
+                }
+                
                 //console.log(loggedUser)
                 
                 //Mis a jour du contexte User

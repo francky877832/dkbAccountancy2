@@ -137,7 +137,7 @@ const loginUser = async (email, username, password) => {
       
         user = await loginUserWithEmailAndPassword(email, username, password,)
 
-
+//console.log(user)
         if(!user)
         {   
             const error = new Error('Utilisateur non trouvé');
@@ -285,8 +285,13 @@ const loginUser = async (email, username, password) => {
                         </View>
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                            <RadioButton value="accountant" />
-                            <Text>Accountant</Text>
+                            <RadioButton value="supplier" />
+                            <Text>Supplier</Text>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                            <RadioButton value="visualiser" />
+                            <Text>Visualiser</Text>
                         </View>
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
@@ -372,7 +377,6 @@ const loginUser = async (email, username, password) => {
 </KeyboardAwareScrollView>
         
 
-<           View style={{height:10}}></View>
             <CustomButton text="Valider" onPress={()=>{credentialType==='login' ? loginUser(email, username, password) :  signUpUser(email, username, password);}} color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={{pressable: userLoginStyles.pressable, text:userLoginStyles.text}} />
                      
 

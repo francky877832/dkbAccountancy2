@@ -71,6 +71,7 @@ export const userLoginStyles = StyleSheet.create({
     {
         paddingVertical : 15,
         borderRadius : 20,
+        bottom : 10
     },
     infoContainer :
     {

@@ -58,7 +58,18 @@ const AddAccountancy = (props) => {
                 date : date
             }
             const res = await addUserDailyAccountancy(user, report)
-
+            
+            Alert.alert(
+                "Alert", 
+                "Ajouté avec succes",
+                [
+                  {
+                    text: "Ok",
+                    onPress: () => navigation.goBack(),
+                  },
+                ],
+                { cancelable: false } 
+              );
         }
         catch(error)
         {

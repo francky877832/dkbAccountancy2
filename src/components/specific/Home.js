@@ -5,11 +5,17 @@ import { appColors, customText} from '../../styles/commonStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { cardContainer } from '../user/userLoginStyles';
+import { UserContext } from '../../context/UserContext';
 const Home = (props) => {
     //console.log('ok--')
     //On va afficher home en fonciton de admin role
     const navigation = useNavigation()
     const route = useRoute()
+    const {user} = useContext(UserContext)
+
+    const view = ['admin', 'boss', 'visualizer']
+    const add = ['admin', 'boss', 'cashier']
+    const supply = ['admin', 'boss', 'supplier']
     return (
         <View style={[homeStyles.container]}>
 
@@ -20,16 +26,17 @@ const Home = (props) => {
             <View style={{height:10}}></View>
 
             <View style={[homeStyles.infoContainer]}>
-                <Pressable  style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('ViewAccountancies') }}>
+                
+                <Pressable  style={[homeStyles.menuButton, {backgroundColor:!view.includes(user.role)?appColors.secondaryColor5:appColors.blue}]} onPress={() => { view.includes(user.role) ? navigation.navigate('ViewAccountancies') : null }}>
                     <Text style={[customText.text, homeStyles.menuText ]}>Visualiser</Text>
                 </Pressable>
 
-                <Pressable style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('AddAccountancy') }}>
+                <Pressable style={[homeStyles.menuButton, {backgroundColor:!add.includes(user.role)?appColors.secondaryColor5:appColors.blue}]} onPress={() => { add.includes(user.role) ? navigation.navigate('AddAccountancy') : null }}>
                     <Text style={[customText.text, homeStyles.menuText ]}>Ajouter</Text>
                 </Pressable>
 
                 {
-                    <Pressable style={[homeStyles.menuButton]} onPress={() => { navigation.navigate('SupplyFunds') }}>
+                    <Pressable style={[homeStyles.menuButton, {backgroundColor:!supply.includes(user.role)?appColors.secondaryColor5:appColors.blue}]} onPress={() => { supply.includes(user.role) ? navigation.navigate('SupplyFunds') : null }}>
                         <Text style={[customText.text, homeStyles.menuText ]}>Approvisionnement</Text>
                     </Pressable>
                 }

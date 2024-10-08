@@ -13,11 +13,12 @@ const AccountancyProvider = ({children}) => {
     const [accounters, setAccounters] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
-    const fetchAccountancies = async () => {
+    const fetchAccountancies = async (user) => {
         try
         {
+            console.log(user)
             setIsLoading(true)
-            const response = await fetch(`${server}/api/datas/accountancy/accountancies`, {
+            const response = await fetch(`${server}/api/datas/accountancy/accountancies/${encodeURIComponent(user._id)}`, {
                 method: 'GET',
                 headers : {
                     'Content-Type': 'application/json',

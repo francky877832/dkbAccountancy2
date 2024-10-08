@@ -48,7 +48,10 @@ export const appFont = {
     }),
     secondaryFontFamily1 :  "Arial",
     secondaryFontFamily2 : "Georgia",
-    secondaryFontFamily3 : this.mainFontFamily,
+    secondaryFontFamily3 :  Platform.select({
+        ios: 'Helvetica',
+        android: 'Roboto',
+    }),
     secondaryFontFamily4 : "Courier",
 
 }

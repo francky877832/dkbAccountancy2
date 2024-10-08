@@ -24,7 +24,7 @@ import { Facebook } from 'react-content-loader/native';
 
 
 
-exports.LikeButton = (props) => {
+export  const LikeButton = (props) => {
     const dispatch = useDispatch();
     const { favourites, liked } = useSelector(state => state.favourites);
     const { item, hasLikedItem, _handleLikePressed, synchro, isCard, styles, user, noText } = props;
@@ -94,7 +94,7 @@ exports.LikeButton = (props) => {
 
 
 
-exports.PrevButton = (props) => {
+export  const PrevButton = (props) => {
     const {styles} = props
     const navigation = useNavigation()
     const color = styles ? styles.color : appColors.black
@@ -107,7 +107,7 @@ exports.PrevButton = (props) => {
 }
 
 /*
-exports.ShareButton = (props) => {
+export  const ShareButton = (props) => {
     const { link, size, color } = props
     return(
         <Pressable style={[commonSimpleComponentsStyles.shareButton,]} onPress = { ()=>{ console.log("share"); }}>
@@ -117,7 +117,7 @@ exports.ShareButton = (props) => {
 }
 */
 
-exports.ShareButton = (props) => {
+export  const ShareButton = (props) => {
     const { link, size, color } = props
     //console.log(link)
 
@@ -130,7 +130,7 @@ exports.ShareButton = (props) => {
 
 
 
-exports.NotificationsSkeleton = (props) => {
+export  const NotificationsSkeleton = (props) => {
     const {number} = props
     return (
         <View style={[{flex:1,paddingHorizontal:10}]}>
@@ -148,7 +148,7 @@ exports.NotificationsSkeleton = (props) => {
 }
 
 
-exports.ConditionChoice = (props) => {
+export  const ConditionChoice = (props) => {
     const {styles, updateConditions, conditions } = props
     
     return(
@@ -169,7 +169,7 @@ exports.ConditionChoice = (props) => {
 }
 
 
-exports.CustomButton = (props) => {
+export  const CustomButton = (props) => {
     const { text, color, backgroundColor, onPress, styles, disabled } = props
     
     const styles_ = StyleSheet.create({
@@ -183,7 +183,7 @@ exports.CustomButton = (props) => {
         )
 }
 
-exports.CustomActivityIndicator = (props) => {
+export  const CustomActivityIndicator = (props) => {
 
     return (
         <View style={[commonSimpleComponentsStyles.activityIndicator.container,{}]}>
@@ -192,7 +192,7 @@ exports.CustomActivityIndicator = (props) => {
     )
 }
 
-exports.CustomModalActivityIndicator = (props) => { 
+export  const CustomModalActivityIndicator = (props) => { 
     const {onRequestClose, isLoading, size, color, message} = props
     return (
         <Modal visible={isLoading} transparent={true}  onRequestClose={() => onRequestClose(true)}>
@@ -206,7 +206,7 @@ exports.CustomModalActivityIndicator = (props) => {
     )
 }
 
-exports.Counter = (props) => {
+export  const Counter = (props) => {
     const { product, number, dispatch, setNumber, quantities, limit} = props
 
     /*
@@ -254,7 +254,7 @@ exports.Counter = (props) => {
 }
 
 
-exports.DisplayPrice = (props) => {
+export  const DisplayPrice = (props) => {
     const { product } = props
     //import { formatMoney, pluralize, choosePrice, hasPropositionPrice } from '../../utils/commonAppFonctions';
 
@@ -269,7 +269,7 @@ exports.DisplayPrice = (props) => {
     )
 }
 
-exports.TemporaryNotification = (props) => {
+export  const TemporaryNotification = (props) => {
     const {message} = props
     return (
         <View style={[commonSimpleComponentsStyles.temporaryNotification.container,{}]}>
@@ -279,7 +279,7 @@ exports.TemporaryNotification = (props) => {
 }
 
 
-exports.PriceDetails = (props) => {
+export  const PriceDetails = (props) => {
     const {products, title, closePriceDetails} = props
     let product; 
 // console.log(products)
@@ -357,7 +357,7 @@ exports.PriceDetails = (props) => {
 }
 
 
-exports.MinifyHorizontalProduct = (props) => {
+export  const MinifyHorizontalProduct = (props) => {
     const { product, styles, onPress } = props
     function formatName(name){
         if(name.length > 30) return name.substr(0,30)+'...'

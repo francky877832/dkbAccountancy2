@@ -8,7 +8,7 @@ import { server } from '../remote/server';
 
 
 
-exports.sendNotifications = async ({user, source, model, type, datas}) => {
+export  const sendNotifications = async ({user, source, model, type, datas}) => {
     const notif = notifications[model]
     const message = notif[type].message
     const action = notif[type].action
@@ -49,7 +49,7 @@ exports.sendNotifications = async ({user, source, model, type, datas}) => {
 }
 
 
-exports.getNotifications = async (user, page, limit) => {
+export  const getNotifications = async (user, page, limit) => {
     //console.log(username, page, limit)
     try{
         const response = await fetch(`${server}/api/datas/notifications/get/${user._id}?page=${page}&limit=${limit}`, {
@@ -76,7 +76,7 @@ exports.getNotifications = async (user, page, limit) => {
 
 
 
-exports.updateNotificationsRead = async ({user, id}) => {
+export  const updateNotificationsRead = async ({user, id}) => {
     console.log(user, id)
     try{
         
@@ -100,7 +100,7 @@ exports.updateNotificationsRead = async ({user, id}) => {
     }
 }
 
-exports.getProductFromNotifications = async (id) => {
+export  const getProductFromNotifications = async (id) => {
     try{
         
         const response = await fetch(`${server}/api/datas/products/get/${id}`);            
@@ -120,7 +120,7 @@ exports.getProductFromNotifications = async (id) => {
 
 
 //OFFERS
-exports.getOffers = async (user, page, limit) => {
+export  const getOffers = async (user, page, limit) => {
     try{
         
         const response = await fetch(`${server}/api/datas/offers/get?user=${user._id}&page=${page}&limit=${limit}`);            
@@ -138,7 +138,7 @@ exports.getOffers = async (user, page, limit) => {
     }
 }
 
-exports.updateOfferRead = async (item) => {
+export  const updateOfferRead = async (item) => {
     //console.log(item)
     const offer = {
         seller : item.seller._id,
@@ -171,7 +171,7 @@ exports.updateOfferRead = async (item) => {
 
 //ORDERS
 
-exports.getOrders = async (user, page, limit) => {
+export  const getOrders = async (user, page, limit) => {
     console.log("data.orders")
     try{
         
@@ -190,7 +190,7 @@ exports.getOrders = async (user, page, limit) => {
     }
 }
 
-exports.updateOrderRead = async (itemId, productId) => {
+export  const updateOrderRead = async (itemId, productId) => {
     const order = {
         product : productId
     }
@@ -217,7 +217,7 @@ exports.updateOrderRead = async (itemId, productId) => {
     }
 }
 
-exports.updateOrderStatus = async (itemId, productId, status) => {
+export  const updateOrderStatus = async (itemId, productId, status) => {
     //console.log(item)
     const order = {
         product : productId,
@@ -247,11 +247,11 @@ exports.updateOrderStatus = async (itemId, productId, status) => {
 
 
 
-exports.addOder = async (user, product, price) =>{
+export  const addOder = async (user, product, price) =>{
     
 }
 
-exports.getLocalOrders = async (type) => {
+export  const getLocalOrders = async (type) => {
     switch(type)
     {
         case "delivered" : //acheve
@@ -270,7 +270,7 @@ exports.getLocalOrders = async (type) => {
 
 //SEND EMAIL
 
-exports.sendEmail = async (email, senderEmail, senderName, receivers, subject, htmlMessage) => {
+export  const sendEmail = async (email, senderEmail, senderName, receivers, subject, htmlMessage) => {
     const apiKey = 'API_KEY';
     const apiUrl = 'https://api.brevo.com/v3/smtp/email';
   
