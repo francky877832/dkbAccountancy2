@@ -306,7 +306,7 @@ const loginUser = async (email, username, password) => {
       
 
                     <View style={[userLoginStyles.credentialContainers]}>
-                        <Input placeholder="Votre Email" onChangeText={(text)=>{setLocation(text)}}
+                        <Input placeholder="Location - Ex : douala/logpom" onChangeText={(text)=>{setLocation(text)}}
                             multiline={false}
                             numberOfLines={1}
                             placeholderTextColor={appColors.lightWhite}
