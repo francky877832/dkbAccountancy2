@@ -107,17 +107,19 @@ const UserProvider = ({children}) => {
                 const user = loggedUser.user
                 //Mis a jour de async storage
                 console.log(user)
+            /*
                 if (Platform.OS != 'web')
                 {
                     await SecureStore?.setItemAsync('authToken', token);
                     await SecureStore?.setItemAsync('user', JSON.stringify({email:user.email, username:user.username, password:user.password}));
                 }
+            */
                 
                 //console.log(loggedUser)
                 
                 //Mis a jour du contexte User
                 setUser(user)
-                setTemporaryAddress({address:user.address, phone:user.phone, name:user.name})
+                //setTemporaryAddress({address:user.address, phone:user.phone, name:user.name})
                 setIsAuthenticated(true);
                 return user
             }

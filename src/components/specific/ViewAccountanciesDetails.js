@@ -12,8 +12,9 @@ import { supplyFundsStyles } from './SupplyFunds';
 import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
-import { formatMoney, getDate, isValidDate } from '../../utils/commonAppFonctions'
+import { formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
 import { cardContainer } from '../user/userLoginStyles';
+import { UserContext } from '../../context/UserContext';
 
 
 const ViewAccountanciesDetails = (props) => {
@@ -21,26 +22,88 @@ const ViewAccountanciesDetails = (props) => {
     const navigation = useNavigation()
     const route = useRoute()
     const {accounter} = route.params
-    const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading, getSearchedAccountancies} = useContext(AccountancyContext)
+    const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading, getSearchedAccountancies, deleteAccountancyRecord} = useContext(AccountancyContext)
     //On va afficher home en fonciton de admin role
+    const { user } = useContext(UserContext)
+
+    const [updateComponent, setUpdateComponent] = useState(false)
+
 
 
     useEffect(() => {
         const fetchData = async () => {
-            await fetchAccountancies(accounter)
+            const datas = await fetchAccountancies(accounter)
         }
         //if(!isLoadig)
             fetchData()
-    }, [])
+    }, [updateComponent])
 
+    
+
+    const getUsername = (email) => {
+        return email.split('@')[0].slice(0, 10);
+    }
+
+    const handleDeletePressed = async (item) => {
+       
+       const deleteARecord = async () => {
+            try
+            {
+                setIsPostLoading(true)
+                
+
+                const res = await deleteAccountancyRecord(item)
+                
+                const alertDatas = {
+                    title : 'Alerte',
+                    text : 'Record supprime avec succes',
+                    icon : 'warning',
+                    action : function (){},
+            }
+
+                showAlert(alertDatas)
+                setUpdateComponent(prev=>!prev)
+            }
+            catch(error)
+            {
+                console.log(error)
+                const alertDatas = {
+                    title : 'Erreur',
+                    text : 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.',
+                    icon : 'warning',
+                    action : function action(){},
+            }
+            showAlert(alertDatas)
+
+            }finally {
+                setIsPostLoading(false)
+            }
+       }
+
+       const alertDatas = {
+        title : 'Alerte',
+        text : 'Etes vous sur de vouloir supprimer cette ligne ? L\'operation est irreversible. Et de plus cela ne modifiera pas l\etat actuel de vos caisse.',
+        icon : 'warning',
+        action : async function () { deleteARecord() },
+        refuseAction : function (){}
+   }
+
+    showAlert(alertDatas)
+
+
+    }
     const RenderAccount = (props) => {
         const { item, index } = props
-        console.log(item)
+        //console.log(item)
 
         return (
    
 
-                <View style={[viewAccountanciesDetailsStyles.line, {backgroundColor:item?.type=='income' ? appColors.lightGreen : appColors.lightRed }]}>
+                <View style={[viewAccountanciesDetailsStyles.line, {backgroundColor:item?.type=='income' ? (item?.user._id==accounter._id) ? appColors.lightRed : appColors.lightGreen : appColors.lightRed  }]}>
+                    <Pressable style={[viewAccountanciesDetailsStyles.cell]} onPress={()=>{handleDeletePressed(item)}}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText, {color:appColors.red,fontWeight:'bold'}]}>Delete</Text>
+                    </Pressable>
+
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
                         <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.date}</Text>
                     </View>
@@ -50,14 +113,14 @@ const ViewAccountanciesDetails = (props) => {
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=='income'?"+":"-"} {item?.amount}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=='income'? (item?.user._id==accounter._id ? "-":"+") : "-"} {item?.amount}</Text>
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.billNo}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=="income" ? (item?.user._id==accounter._id) ? getUsername(item?.supplyTo.email) : getUsername(item?.user.email) : item?.billNo}</Text>
                     </View>
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.cashBalance}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=="income" ? (item?.user._id==accounter._id) ? item?.cashBalance : item?.supplyCashBalance : item?.cashBalance}</Text>
                     </View>
                 </View>
                 
@@ -75,7 +138,7 @@ const ViewAccountanciesDetails = (props) => {
         {
             setIsPostLoading(true)
             const date_ = selectedDate.toLowerCase() ==='day' ? date : '01/'+date
-            console.log(date_)
+            //console.log(date_)
 
             if(!isValidDate(date_))
             {
@@ -162,6 +225,11 @@ const ViewAccountanciesDetails = (props) => {
                     ListHeaderComponent={() => {
                         return (
                             <View style={[viewAccountanciesDetailsStyles.line]}>
+
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Action</Text>
+                                </View>
+
                                 <View style={[viewAccountanciesDetailsStyles.cell]}>
                                     <Text style={[viewAccountanciesDetailsStyles.titleText]}>Date</Text>
                                 </View>

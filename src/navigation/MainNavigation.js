@@ -47,17 +47,17 @@ export default function MainNavigation() {
               screenOptions={annimatedStackTransition(0.9, 250, 200)}
             >
                 
-                <Stack.Screen name="Home" component={Home}  options={{ title: <HeaderNavigation title="Home"/>, headerShown : false, tabBarVisible: false, }} />
-                <Stack.Screen name="ViewAccountancies" component={ViewAccountancies}  options={{ title: <HeaderNavigation title="Accountancies"/>, headerShown : false, tabBarVisible: false, }} />
-                <Stack.Screen name="ViewAccountanciesDetails" component={ViewAccountanciesDetails}  options={{ title: <HeaderNavigation title="Accountancies Details"/>, headerShown : false, tabBarVisible: false, }} />
-                <Stack.Screen name="AddAccountancy" component={AddAccountancy}  options={{ title: <HeaderNavigation title="Add Accountancy"/>, headerShown : false, tabBarVisible: false, }} />
-                <Stack.Screen name="SupplyFunds" component={SupplyFunds}  options={{ title: <HeaderNavigation title="ASupply Funds"/>, headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="Home" component={Home}  options={{ title: <HeaderNavigation title="Home"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="ViewAccountancies" component={ViewAccountancies}  options={{ title: <HeaderNavigation title="Accountancies"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="ViewAccountanciesDetails" component={ViewAccountanciesDetails}  options={{ title: <HeaderNavigation title="Accountancies Details"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="AddAccountancy" component={AddAccountancy}  options={{ title: <HeaderNavigation title="Add Accountancy"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="SupplyFunds" component={SupplyFunds}  options={{ title: <HeaderNavigation title="Add Supply Funds"/>, headerShown : true, tabBarVisible: false, }} />
 
 
 
 
-                <Stack.Screen name="LoaderPage" component={LoaderPage}  options={{ title: <HeaderNavigation title="Loader"/>, headerShown : false, tabBarVisible: false, }} />
-                <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : false, tabBarVisible: false, }} />
+                <Stack.Screen name="LoaderPage" component={LoaderPage}  options={{ title: <HeaderNavigation title="Loader"/>, headerShown : true, tabBarVisible: false, }} />
+                <Stack.Screen name="UserLogin" component={UserLogin}  options={{ title: <HeaderNavigation title="Login"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="UserSignup" component={UserSignup}  options={{ title: <HeaderNavigation title="Sign Up"/>, headerShown : true, tabBarVisible: false, }} />
                 <Stack.Screen name="ResetPassword" component={ResetPassword}  options={{ title: <HeaderNavigation title="Reset Password"/>, headerShown : true, tabBarVisible: false, }} />
                    

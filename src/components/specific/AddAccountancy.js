@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useRef, useEffect, useContext } from 'reac
 import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView} from 'react-native';
 import { Input } from 'react-native-elements';
 
-import { formatMoney, getDate, isValidDate } from '../../utils/commonAppFonctions'
+import { formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
 import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 import { appColors, formErrorStyle} from '../../styles/commonStyles';
 import { searchBarStyles } from '../../styles/searchBarStyles';
@@ -19,7 +19,7 @@ const AddAccountancy = (props) => {
     const { addUserDailyAccountancy } = useContext(AccountancyContext)
 
     const [checkoutReason, setCheckoutReason] = useState("")
-    const [amount, setAmount] = useState(0)
+    const [amount, setAmount] = useState("")
     const [billNo, setBillNo] = useState("")
     const [receivedBy, setReceivedBy] = useState("")
     const [cashBalance, setCashBalance] = useState("")
@@ -49,6 +49,8 @@ const AddAccountancy = (props) => {
                 return;
             }
 
+            //throw new Error()
+
             const report = {
                 receivedBy,
                 reason : checkoutReason,
@@ -59,22 +61,26 @@ const AddAccountancy = (props) => {
             }
             const res = await addUserDailyAccountancy(user, report)
             
-            Alert.alert(
-                "Alert", 
-                "Ajouté avec succes",
-                [
-                  {
-                    text: "Ok",
-                    onPress: () => navigation.goBack(),
-                  },
-                ],
-                { cancelable: false } 
-              );
+            const alertDatas = {
+                title : 'Alerte',
+                text : 'Votre transaction a été effectuée avec success.',
+                icon : 'warning',
+                action : navigation?.goBack,
+           }
+
+            showAlert(alertDatas)
         }
         catch(error)
         {
             console.log(error)
-            Alert.alert('Error', 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.')
+            const alertDatas = {
+                title : 'Erreur',
+                text : 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.',
+                icon : 'warning',
+                action : function action(){},
+           }
+        showAlert(alertDatas)
+
         }finally {
             setIsPostLoading(false)
         }

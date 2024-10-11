@@ -18,7 +18,7 @@ import auth from '@react-native-firebase/auth';
 
 
 import { server } from '../../remote/server';
-import { serialize, getFirebaseErrorMessage } from '../../utils/commonAppFonctions'
+import { serialize, getFirebaseErrorMessage, showAlert } from '../../utils/commonAppFonctions'
 import { UserContext } from '../../context/UserContext';
 
 
@@ -35,7 +35,7 @@ const UserLogin = (props) =>
     const navigation = useNavigation()
     const {checkEmail, checkPassword, checkUsername, user, setUser, updateUser, setIsAuthenticated, signupUserWithEmailAndPassword, loginUserWithEmailAndPassword} = useContext(UserContext)
 
-    const [credentialType, setCredentialType] = React.useState('register');
+    const [credentialType, setCredentialType] = React.useState(route?.params?.page || 'login');
     const [role, setRole] = useState('cashier')
 
 
@@ -77,7 +77,14 @@ const UserLogin = (props) =>
             
             //const userCredential  = await auth().createUserWithEmailAndPassword(email, password)
             signupUserWithEmailAndPassword(email, username, password, adminPassword, role, location).then(async ()=> {
-                await loginUser(email, username, password) 
+                const alertDatas = {
+                    title : 'Alert',
+                    text : 'Nouveau membre enregistre avec succes',
+                    icon : 'warning',
+                    action : navigation?.goBack,
+               }
+            showAlert(alertDatas)
+    
             })
         }
         catch(error)
@@ -94,12 +101,21 @@ const UserLogin = (props) =>
             }
             else
             {
+                const alertDatas = {
+                    title : 'Erreur',
+                    text : 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.',
+                    icon : 'warning',
+                    action : function (){},
+               }
+    
                 if(error.code)
                 {
-                    Alert.alert("Erreur", getFirebaseErrorMessage(error.code))
+                    showAlert({...alertDatas, text:getFirebaseErrorMessage(error.code)})
                     return;
                 }
-                Alert.alert("Error", "Une erreur est sruvenue lors de la verificaiton de vos informations. Vérifiez les données fournies.")
+                showAlert(alertDatas)
+                
+
             }
 
         }finally{
@@ -155,12 +171,19 @@ const loginUser = async (email, username, password) => {
         console.log(error)
 
       
-            if(error.code)
-            {
-                Alert.alert("Erreur", getFirebaseErrorMessage(error.code))
-                return;
-            }
-            Alert.alert("Error", "Une erreur est sruvenue lors de la verificaiton de vos informations. Vérifiez les données fournies.")
+        const alertDatas = {
+            title : 'Erreur',
+            text : 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.',
+            icon : 'warning',
+            action : function (){},
+       }
+
+        if(error.code)
+        {
+            showAlert({...alertDatas, text:getFirebaseErrorMessage(error.code)})
+            return;
+        }
+        showAlert(alertDatas)
         
         return;
     }finally{
@@ -182,6 +205,7 @@ const loginUser = async (email, username, password) => {
                     </View>
                 </LinearGradient>
             */
+           //console.log(user)
     return(
 <View style={[userLoginStyles.container]}>
                         
@@ -190,15 +214,20 @@ const loginUser = async (email, username, password) => {
             <View  style={[userLoginStyles.registerOrLogin]}>  
                 <RadioButton.Group onValueChange={newValue => setCredentialType(newValue)}  value={credentialType} >
                     <View style={[userLoginStyles.credentialGroup]}>
+                    {['boss', 'admin'].includes(user?.role) &&
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
                             <RadioButton value="register" />
                             <Text>Register</Text>
                         </View>
+                    }
 
+            
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
                             <RadioButton value="login" />
                             <Text>Login</Text>
                         </View>
+            
+
                     </View>
                 </RadioButton.Group>
             </View>
@@ -273,7 +302,7 @@ const loginUser = async (email, username, password) => {
                 </View>   
 
             {
-                credentialType=='register' &&
+                credentialType=='register' && 
 
                 <>
                 <View  style={[userLoginStyles.registerOrLogin]}>  
@@ -290,7 +319,7 @@ const loginUser = async (email, username, password) => {
                         </View>
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
-                            <RadioButton value="visualiser" />
+                            <RadioButton value="visualizer" />
                             <Text>Visualiser</Text>
                         </View>
 

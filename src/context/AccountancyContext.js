@@ -110,6 +110,37 @@ const AccountancyProvider = ({children}) => {
     }
 
 
+
+    const deleteAccountancyRecord = async (record) => {
+       // console.log("okkkkk")
+        //return;
+        try {
+            
+            const response = await fetch(`${server}/api/datas/accountancy/remove/${encodeURIComponent(record._id)}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}), 
+            });
+    
+            // Vérification si la requête a réussi
+            if (!response.ok) {
+                const errorData = await response.text();
+               throw new Error(errorData);
+            }
+            //console.log(updatedFormData)
+            
+            const responseData = await response.json();
+
+            return responseData.datas
+        } catch (error) {
+            console.error('Erreur lors de la requête:', error);
+            return false
+        }
+    }
+
+
     const fetchAccounters = async () => {
         try {
             setIsLoading(true)
@@ -135,6 +166,7 @@ const AccountancyProvider = ({children}) => {
             // Manipuler les données ici (liste des utilisateurs)
             //console.log(res)
             setAccounters(res.datas)
+            return res.datas
     
         } catch (error) {
             console.error('Fetch error:', error.message);
@@ -150,7 +182,7 @@ const AccountancyProvider = ({children}) => {
 
     const filterStateVars = {accounters, accountancies, isLoading}
     const filterStateSetters = {setAccounters, setIsLoading}
-    const utilsFunctions = {fetchAccountancies, getSearchedAccountancies, addUserDailyAccountancy, fetchAccounters}
+    const utilsFunctions = {deleteAccountancyRecord, fetchAccountancies, getSearchedAccountancies, addUserDailyAccountancy, fetchAccounters}
     return (
         <AccountancyContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}

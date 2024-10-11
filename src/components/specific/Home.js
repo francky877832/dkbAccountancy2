@@ -19,6 +19,24 @@ const Home = (props) => {
     return (
         <View style={[homeStyles.container]}>
 
+    {['boss', 'admin'].includes(user?.role) &&
+        <>
+            <View style={[homeStyles.menu]}>
+                <Pressable style={[homeStyles.menuItem]} onPress={() => {navigation.navigate('UserLogin', {page:'register'})}}>
+                    <Text style={[customText.text, homeStyles.menuItemText ]}>Sign Up</Text>
+                </Pressable>
+                
+                <View style={{width:10}}></View>
+
+                <Pressable style={[homeStyles.menuItem]} onPress={() => {navigation.navigate('UserLogin', {page:'register'})}}>
+                    <Text style={[customText.text, homeStyles.menuItemText ]}>Logout</Text>
+                </Pressable>
+            </View>
+
+            <View style={{height:10}}></View>
+        </>
+    }
+
             <View style={[homeStyles.logoBox]}>
                 <Image source={require('../../assets/logos/logo1.jpg')}  style={[homeStyles.logoImage]}/>
             </View>
@@ -55,6 +73,24 @@ const homeStyles = StyleSheet.create({
         justifyContent : 'center',
         alignItems : 'center',
     },
+    menu :
+    {
+        flexDirection : 'row',
+        width : '100%',
+        justifyContent : 'center',
+        alignItems : 'center'
+    },
+    menuItem : 
+    {
+
+    },
+    menuItemText : 
+    {
+        fontWeight : 'bold',
+        fontSize : 15,
+        color : appColors.blue,
+    },
+
     logoBox : 
     {
         height : 300,

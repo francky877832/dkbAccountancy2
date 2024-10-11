@@ -1,5 +1,5 @@
-import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, KeyboardAvoidingView} from 'react-native';
+import React, { useState, forwardRef, useRef, useEffect, useContext, useCallback } from 'react';
+import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, Platform} from 'react-native';
 
 import { Input } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
@@ -9,12 +9,14 @@ import { CustomButton, CustomModalActivityIndicator } from '../common/CommonSimp
 import { appColors, customText} from '../../styles/commonStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { searchBarStyles } from '../../styles/searchBarStyles';
-import { formatMoney, getDate } from '../../utils/commonAppFonctions'
+import { formatMoney, getDate, showAlert } from '../../utils/commonAppFonctions'
 
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
 import { AccountancyContext } from '../../context/AccountancyContext';
 import { UserContext } from '../../context/UserContext';
 import { cardContainer } from '../user/userLoginStyles';
+
+import Swal from 'sweetalert2';
 
 
 const SupplyFunds = (props) => {
@@ -39,6 +41,7 @@ const SupplyFunds = (props) => {
 
 
 
+    const [selectedReceipients, setSelectedReceipients] = useState('')
 
     const submitAccountancy = async () => {
         //console.log(accounters)
@@ -49,14 +52,14 @@ const SupplyFunds = (props) => {
             setErrors({})
 
            
-            //console.log(selectedReceipients)
+            console.log(selectedReceipients)
             //return
 
             const report = {
                 reason : 'Supply',
                 amount : parseInt(amount.split('.').join('')),
                 billNo : '/',
-                receivedBy : selectedReceipients, //id du receipient
+                supplyTo : selectedReceipients, //id du receipient
                 type : 'income',
                 date : getDate()
             }
@@ -64,23 +67,30 @@ const SupplyFunds = (props) => {
             
             const res = await addUserDailyAccountancy(user, report)
 
-            Alert.alert(
-                "Alert", 
-                "Ajouté avec succes",
-                [
-                  {
-                    text: "Ok",
-                    onPress: () => navigation.goBack(),
-                  },
-                ],
-                { cancelable: false } 
-              );
+            //throw new Error()
+           const alertDatas = {
+                title : 'Alerte',
+                text : 'Votre transaction a été effectuée avec success.',
+                icon : 'warning',
+                action : navigation?.goBack,
+           }
+
+            showAlert(alertDatas)
+            
 
         }
         catch(error)
         {
             console.log(error)
-            Alert.alert('Error', 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.')
+            //Alert.alert('Error', 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.')
+            const alertDatas = {
+                title : 'Erreur',
+                text : 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.',
+                icon : 'warning',
+                action : function (){},
+           }
+        showAlert(alertDatas)
+
         }finally {
             setIsPostLoading(false)
         }
@@ -106,17 +116,17 @@ const SupplyFunds = (props) => {
         {
             tmp = accounters.filter(el => ['kennevarelle9', 'stessydkbglobal', 'dorisndokon3'].includes(getUsername(el.email)))
         }
+        //console.log(tmp)
         return tmp
     }
-
-    const [selectedReceipients, setSelectedReceipients] = useState('')
+    //console.log(accounters)
 
 
     useEffect(() => {
        
         const fetchData = async () => {
-            await fetchAccounters()
-            setSelectedReceipients(getAccounters(accounters)[0]?._id)
+            fetchAccounters().then(acc => setSelectedReceipients(getAccounters(acc)[0]?._id)  )
+
         }
         //if(!isLoadig)
             fetchData()
@@ -130,7 +140,7 @@ const SupplyFunds = (props) => {
                         </View>
 
                         <View style={{height:10,}}></View>
-                            <Input placeholder="9.999 XAF" value={formatMoney(amount)} onChangeText={(price)=>{setAmount(formatMoney(price))}}
+                            <Input placeholder="Montant en XAF" value={formatMoney(amount)} onChangeText={(price)=>{setAmount(formatMoney(price))}}
                                 inputMode='numeric'
                                 multiline={false}
                                 placeholderTextColor={appColors.secondaryColor5}

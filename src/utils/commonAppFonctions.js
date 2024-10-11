@@ -1,6 +1,6 @@
 import nlp from "compromise";
 const Fuse = require('fuse.js');
-import { Linking, Share, Alert } from 'react-native';
+import { Linking, Share, Alert, Platform} from 'react-native';
 
  
 
@@ -548,6 +548,45 @@ export  const isValidDate = (date) => {
 
     return date.split('/').length === 3
 }
+
+import Swal from 'sweetalert2';
+
+export const showAlert = (datas) => {
+    if (Platform.OS === 'web') {
+      Swal.fire({
+        title: datas.title,
+        text: datas.text,
+        icon: datas.icon, //warning
+        showCancelButton: true,
+        confirmButtonText: 'Ok',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+            datas.action()
+        } else {
+            //console.log(typeof datas.refuseAction=='function')
+            typeof datas.refuseAction=='function' ? datas.refuseAction() : datas.action()
+        }
+      });
+    } else {
+        Alert.alert(
+            datas.title, 
+            datas.text,
+            [
+                {
+                    text: 'Yes',
+                    onPress: () => null,
+                    style: 'cancel',
+                },
+              {
+                text: "Ok",
+                onPress: () => datas.action()
+              },
+            ],
+            { cancelable: false } 
+          );
+    }
+  };
 
 
 
