@@ -14,28 +14,30 @@ const Home = (props) => {
     const {user} = useContext(UserContext)
 
     const view = ['admin', 'boss', 'visualizer']
-    const add = ['admin', 'boss', 'cashier']
+    const add = ['admin', 'cashier', 'supplier']
     const supply = ['admin', 'boss', 'supplier']
     return (
         <View style={[homeStyles.container]}>
 
-    {['boss', 'admin'].includes(user?.role) &&
-        <>
             <View style={[homeStyles.menu]}>
+
+        {['boss', 'admin'].includes(user?.role) &&
+        
                 <Pressable style={[homeStyles.menuItem]} onPress={() => {navigation.navigate('UserLogin', {page:'register'})}}>
                     <Text style={[customText.text, homeStyles.menuItemText ]}>Sign Up</Text>
                 </Pressable>
-                
+         }
+    
                 <View style={{width:10}}></View>
-
-                <Pressable style={[homeStyles.menuItem]} onPress={() => {navigation.navigate('UserLogin', {page:'register'})}}>
+    
+                <Pressable style={[homeStyles.menuItem]} onPress={() => {navigation.navigate('UserLogin', {page:'login'})}}>
                     <Text style={[customText.text, homeStyles.menuItemText ]}>Logout</Text>
                 </Pressable>
             </View>
 
             <View style={{height:10}}></View>
-        </>
-    }
+    
+    
 
             <View style={[homeStyles.logoBox]}>
                 <Image source={require('../../assets/logos/logo1.jpg')}  style={[homeStyles.logoImage]}/>

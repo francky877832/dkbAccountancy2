@@ -110,7 +110,7 @@ const UserLogin = (props) =>
     
                 if(error.code)
                 {
-                    showAlert({...alertDatas, text:getFirebaseErrorMessage(error.code)})
+                    showAlert({...alertDatas, text:getFirebaseErrorMessage(error.code)+"\nVerifiez votre connexion a Internet"})
                     return;
                 }
                 showAlert(alertDatas)
@@ -180,7 +180,7 @@ const loginUser = async (email, username, password) => {
 
         if(error.code)
         {
-            showAlert({...alertDatas, text:getFirebaseErrorMessage(error.code)})
+            showAlert({...alertDatas, text:getFirebaseErrorMessage(error.code)+"\nVerifiez votre connexion a Internet"})
             return;
         }
         showAlert(alertDatas)

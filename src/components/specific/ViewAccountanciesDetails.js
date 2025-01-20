@@ -92,17 +92,31 @@ const ViewAccountanciesDetails = (props) => {
 
 
     }
+
+    const canDelete = () => {
+        //if(!(user.email===accounter.email && accounter.email==='comptabilite@dkbglobaltrader.net') )
+        if(user.email==='comptabilite@dkbglobaltrader.net')
+        {
+            return !(['comptabilite@dkbglobaltrader.net', 'benjamindzogang@dkbglobaltrader.net', 'ornelletsotezo@gmail.com'].includes(accounter.email))
+        } 
+        return false
+    } 
+    
     const RenderAccount = (props) => {
         const { item, index } = props
         //console.log(item)
+
 
         return (
    
 
                 <View style={[viewAccountanciesDetailsStyles.line, {backgroundColor:item?.type=='income' ? (item?.user._id==accounter._id) ? appColors.lightRed : appColors.lightGreen : appColors.lightRed  }]}>
-                    <Pressable style={[viewAccountanciesDetailsStyles.cell]} onPress={()=>{handleDeletePressed(item)}}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText, {color:appColors.red,fontWeight:'bold'}]}>Delete</Text>
-                    </Pressable>
+                    
+                    {  canDelete() &&
+                        <Pressable style={[viewAccountanciesDetailsStyles.cell]} onPress={()=>{handleDeletePressed(item)}}>
+                            <Text style={[viewAccountanciesDetailsStyles.recordItemText, {color:appColors.red,fontWeight:'bold'}]}>Delete</Text>
+                        </Pressable>
+                    }
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
                         <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.date}</Text>
@@ -114,6 +128,10 @@ const ViewAccountanciesDetails = (props) => {
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
                         <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=='income'? (item?.user._id==accounter._id ? "-":"+") : "-"} {item?.amount}</Text>
+                    </View>
+
+                    <View style={[viewAccountanciesDetailsStyles.cell]}>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=='outcome' ? item?.receivedBy : getUsername(item?.supplyTo.email) }</Text>
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
@@ -222,13 +240,14 @@ const ViewAccountanciesDetails = (props) => {
                     keyExtractor={ (item) => { return item._id.toString(); } }
                     ItemSeparatorComponent ={ (item) => { return <View style={{height:5,}}></View> }}
                     contentContainerStyle={[viewAccountanciesDetailsStyles.flatlist]}
-                    ListHeaderComponent={() => {
+                    ListHeaderComponent={({item}) => {
                         return (
                             <View style={[viewAccountanciesDetailsStyles.line]}>
-
+                            { canDelete() && !(user.email==accounter.email && accounter.email=='comptabilite@dkbglobaltrader.net') &&
                                 <View style={[viewAccountanciesDetailsStyles.cell]}>
                                     <Text style={[viewAccountanciesDetailsStyles.titleText]}>Action</Text>
                                 </View>
+                            }
 
                                 <View style={[viewAccountanciesDetailsStyles.cell]}>
                                     <Text style={[viewAccountanciesDetailsStyles.titleText]}>Date</Text>
@@ -242,6 +261,11 @@ const ViewAccountanciesDetails = (props) => {
                                     <Text style={[viewAccountanciesDetailsStyles.titleText]}>Amount</Text>
                                 </View>
 
+                              
+                                <View style={[viewAccountanciesDetailsStyles.cell]}>
+                                    <Text style={[viewAccountanciesDetailsStyles.titleText]}>Received By</Text>
+                                </View>
+                                
                                 <View style={[viewAccountanciesDetailsStyles.cell]}>
                                     <Text style={[viewAccountanciesDetailsStyles.titleText]}>Bill</Text>
                                 </View>
