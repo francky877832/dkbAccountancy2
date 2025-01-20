@@ -1,0 +1,19 @@
+--Pour init le projet 
+
+npx expo export:web
+npm install -g firebase-tools
+firebase login jira877832@gmail.com
+firebase init
+firebase deploy - pour mettre a jour manuellement sans passer par github Actions(auto)
+
+Project Console: https://console.firebase.google.com/project/dkbaccountancy/overview
+Hosting URL: https://dkbaccountancy.web.app
+
+---poyur les mise a jour
+
+npx expo export:web
+firebase deploy 
+remote url server
+
+
+euıüaioöEUIÜAİOÖ
