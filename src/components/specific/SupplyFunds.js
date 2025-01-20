@@ -54,8 +54,8 @@ const SupplyFunds = (props) => {
             setIsPostLoading(true)
             setErrors({})
 
-            console.log("okkkkk")
-            console.log(selectedReceipients)
+            //console.log("okkkkk")
+            //console.log(selectedReceipients)
             //return
 
             const report = {
@@ -63,7 +63,7 @@ const SupplyFunds = (props) => {
                 amount : parseInt(amount.split('.').join('')),
                 billNo : '/',
                 supplyTo : selectedReceipients, //id du receipient
-                type : 'income',
+                type : !!supplyReason ? 'auto-income' :'income',
                 date : getDate()
             }
             console.log(report)
@@ -119,6 +119,7 @@ const SupplyFunds = (props) => {
         {
             //console.log("Okkkkk")
             tmp = [user,]
+            //tmp = accounters.filter(el => getUsername(el.email) == 'admin')
             //console.log(tmp)
         }
         else if(username=='admin')
@@ -205,7 +206,7 @@ const SupplyFunds = (props) => {
                                 placeholderTextColor={appColors.secondaryColor5}
                                 inputStyle = {[searchBarStyles.inputText, ]}
                                 onFocus={() => setSupplyReasonFocused(true)}
-                                onBlur={() => setSelectedReceipients(false)}
+                                onBlur={() => setSupplyReasonFocused(false)}
                                 underlineColorAndroid='transparent'
                                 containerStyle={[supplyFundsStyles.inputBox]}
                                 inputContainerStyle = {[searchBarStyles.inputContainer, supplyReasonFocused && searchBarStyles.inputContainerFocused,  supplyFundsStyles.inputContainer]}

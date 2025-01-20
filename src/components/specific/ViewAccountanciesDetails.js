@@ -17,6 +17,7 @@ import { cardContainer } from '../user/userLoginStyles';
 import { UserContext } from '../../context/UserContext';
 
 
+
 const ViewAccountanciesDetails = (props) => {
 
     const navigation = useNavigation()
@@ -106,11 +107,42 @@ const ViewAccountanciesDetails = (props) => {
         const { item, index } = props
         //console.log(item)
 
+        const alertDatas = {
+            title : 'Alerte',
+            text : item.reason,
+            icon : 'Information',
+            action : null,
+       }
+
+       let backgroundColor = ""
+       let sign = '+'
+       if(item?.type=='income')
+       {    if(item?.user._id==accounter._id)
+            {
+                backgroundColor = appColors.lightRed
+                sign = '-'
+            }
+            else
+            {
+                backgroundColor = appColors.lightGreen
+                sign = '+'
+            }
+       }
+       else  if(item?.type=='auto-income')
+       {
+            backgroundColor = appColors.orange
+            sign = '+'
+       }
+       else
+       {
+            backgroundColor = appColors.lightRed 
+            sign = '+'
+       }
 
         return (
    
 
-                <View style={[viewAccountanciesDetailsStyles.line, {backgroundColor:item?.type=='income' ? (item?.user._id==accounter._id) ? appColors.lightRed : appColors.lightGreen : appColors.lightRed  }]}>
+                <Pressable onPress={() => showAlert(alertDatas)} style={[viewAccountanciesDetailsStyles.line, {backgroundColor:backgroundColor}]}>
                     
                     {  canDelete() &&
                         <Pressable style={[viewAccountanciesDetailsStyles.cell]} onPress={()=>{handleDeletePressed(item)}}>
@@ -123,11 +155,11 @@ const ViewAccountanciesDetails = (props) => {
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.reason}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.reason.substring(0,20)} {item.reason.length>20 ? "..." :"."}</Text>
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=='income'? (item?.user._id==accounter._id ? "-":"+") : "-"} {item?.amount}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{sign} {item?.amount}</Text>
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
@@ -140,7 +172,7 @@ const ViewAccountanciesDetails = (props) => {
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
                         <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=="income" ? (item?.user._id==accounter._id) ? item?.cashBalance : item?.supplyCashBalance : item?.cashBalance}</Text>
                     </View>
-                </View>
+                </Pressable>
                 
         )
     }
