@@ -14,8 +14,8 @@ const Home = (props) => {
     const {user} = useContext(UserContext)
 
     const view = ['admin', 'boss', 'visualizer']
-    const add = ['admin', 'cashier', 'supplier']
-    const supply = ['admin', 'boss', 'supplier']
+    const add = ['admin', 'cashier', 'supplier', 'auto-supplier']
+    const supply = ['admin', 'boss', 'supplier', 'auto-supplier']
     return (
         <View style={[homeStyles.container]}>
 

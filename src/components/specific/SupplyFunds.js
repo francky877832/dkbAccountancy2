@@ -39,6 +39,9 @@ const SupplyFunds = (props) => {
 
     const [errors, setErrors] = useState({});
 
+    const [supplyReason, setSupplyReason] = useState(null)
+    const [supplyReasonFocused, setSupplyReasonFocused] = useState(false)
+
 
 
     const [selectedReceipients, setSelectedReceipients] = useState('')
@@ -51,23 +54,27 @@ const SupplyFunds = (props) => {
             setIsPostLoading(true)
             setErrors({})
 
-           
+            console.log("okkkkk")
             console.log(selectedReceipients)
             //return
 
             const report = {
-                reason : 'Supply',
+                reason : !!supplyReason ? 'auto-supply '+supplyReason : 'Supply',
                 amount : parseInt(amount.split('.').join('')),
                 billNo : '/',
                 supplyTo : selectedReceipients, //id du receipient
                 type : 'income',
                 date : getDate()
             }
+            console.log(report)
             //return
             
             const res = await addUserDailyAccountancy(user, report)
 
-            //throw new Error()
+            if(!res)
+            {
+                throw new Error("Erreur lors de l'ajout du raport")
+            }
            const alertDatas = {
                 title : 'Alerte',
                 text : 'Votre transaction a été effectuée avec success.',
@@ -108,6 +115,12 @@ const SupplyFunds = (props) => {
         {
             tmp = accounters.filter(el => getUsername(el.email) == 'admin')
         }
+        else if(user.role=='auto-supplier')
+        {
+            //console.log("Okkkkk")
+            tmp = [user,]
+            //console.log(tmp)
+        }
         else if(username=='admin')
         {
             tmp = accounters.filter(el => getUsername(el.email) == 'comptabilite')
@@ -123,9 +136,13 @@ const SupplyFunds = (props) => {
 
 
     useEffect(() => {
+        //console.log(user._id)
        
         const fetchData = async () => {
-            fetchAccounters().then(acc => setSelectedReceipients(getAccounters(acc)[0]?._id)  )
+            fetchAccounters().then(acc => {
+                console.log(acc)
+                setSelectedReceipients(getAccounters(acc)[0]?._id)
+            })
 
         }
         //if(!isLoadig)
@@ -177,8 +194,26 @@ const SupplyFunds = (props) => {
                 </View>
 
 
-                <View style={{height:20}}></View>
+                {
+                    user.role==='auto-supplier' &&
 
+                    <>
+                        <View style={{height:10}}></View>
+
+                        <Input placeholder="Motif" value={supplyReason} onChangeText={(r)=>{setSupplyReason(r)}}
+                                multiline={false}
+                                placeholderTextColor={appColors.secondaryColor5}
+                                inputStyle = {[searchBarStyles.inputText, ]}
+                                onFocus={() => setSupplyReasonFocused(true)}
+                                onBlur={() => setSelectedReceipients(false)}
+                                underlineColorAndroid='transparent'
+                                containerStyle={[supplyFundsStyles.inputBox]}
+                                inputContainerStyle = {[searchBarStyles.inputContainer, supplyReasonFocused && searchBarStyles.inputContainerFocused,  supplyFundsStyles.inputContainer]}
+                            />
+                    </>
+                }
+
+            <View style={{height:20}}></View>
 
             <View style={[addAccountancyStyles.addProductSubmitView,{}]}>
                     <CustomButton text="Valider" color={appColors.white} backgroundColor={appColors.secondaryColor1} styles={addAccountancyStyles} onPress={()=>{submitAccountancy()}} />
