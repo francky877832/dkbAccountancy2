@@ -2,6 +2,7 @@ import React, { useState, forwardRef, useRef, useEffect, useContext } from 'reac
 import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, Image} from 'react-native';
 
 import { appColors, customText} from '../../styles/commonStyles';
+import { homeStyles } from '../../styles/homeStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { cardContainer } from '../user/userLoginStyles';
@@ -32,6 +33,17 @@ const Home = (props) => {
     
                 <Pressable style={[homeStyles.menuItem]} onPress={() => {navigation.navigate('UserLogin', {page:'login'})}}>
                     <Text style={[customText.text, homeStyles.menuItemText ]}>Logout</Text>
+                </Pressable>
+            </View>
+
+        <View style={{height:5}}></View>
+            <View style={[homeStyles.menu]}>
+                <Pressable>
+                    <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20}]}>Balance : </Text>
+                </Pressable>
+
+                <Pressable>
+                    <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20,fontWeight:'bold', color:user.cashBalance<0?'red':appColors.green}]}>{user.cashBalance} XAF</Text>
                 </Pressable>
             </View>
 
@@ -66,67 +78,3 @@ const Home = (props) => {
 }
 
 export default Home
-
-
-const homeStyles = StyleSheet.create({
-    container :
-    {
-        flex : 1,
-        justifyContent : 'center',
-        alignItems : 'center',
-    },
-    menu :
-    {
-        flexDirection : 'row',
-        width : '100%',
-        justifyContent : 'center',
-        alignItems : 'center'
-    },
-    menuItem : 
-    {
-
-    },
-    menuItemText : 
-    {
-        fontWeight : 'bold',
-        fontSize : 15,
-        color : appColors.blue,
-    },
-
-    logoBox : 
-    {
-        height : 300,
-       width : '100%',
-       justifyContent : 'center',
-        alignItems : 'center',
-    },
-    logoImage :
-    {
-        height : '100%',
-        width : '90%'
-    },
-    infoContainer :
-    {
-        ...cardContainer,
-        justifyContent : 'center',
-        alignItems : 'center',
-        width  : '100%',
-    },
-    menuButton :
-    {
-        padding : 20,
-        borderRadius : 10,
-        borderWidth : 1,
-        borderColor : appColors.lightWhite,
-        width : '100%',
-        alignItems : 'center',
-        marginTop : 5,
-        backgroundColor : appColors.blue,
-    },
-    menuText :
-    {
-        fontWeight : 'bold',
-        fontSize : 16,
-        color : appColors.white,
-    },
-})

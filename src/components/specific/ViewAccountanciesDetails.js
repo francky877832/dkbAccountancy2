@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, FlatList} from 'react-native';
+import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, FlatList, Modal } from 'react-native';
 
-import { Input } from 'react-native-elements';
+import { Input, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 
 import { appColors, customText, screenWidth } from '../../styles/commonStyles';
@@ -12,9 +12,11 @@ import { supplyFundsStyles } from './SupplyFunds';
 import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpleComponents'
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
+import { homeStyles } from '../../styles/homeStyles';
 import { formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
 import { cardContainer } from '../user/userLoginStyles';
 import { UserContext } from '../../context/UserContext';
+import { userLoginStyles } from '../user/userLoginStyles';
 
 
 
@@ -28,6 +30,14 @@ const ViewAccountanciesDetails = (props) => {
     const { user } = useContext(UserContext)
 
     const [updateComponent, setUpdateComponent] = useState(false)
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [amount, setAmount] = useState(0)
+    const [adminPassword, setAdminPassword] = useState("")
+
+    const [amountFocused, setAmountFocused] = useState(false)
+    const [adminPasswordFocused, setAdminPasswordFocused] = useState(false)
+    const [adminPasswordShowed, setAdminPasswordShowed] = useState(false)
 
 
 
@@ -139,6 +149,8 @@ const ViewAccountanciesDetails = (props) => {
             sign = '+'
        }
 
+
+
         return (
    
 
@@ -209,6 +221,77 @@ const ViewAccountanciesDetails = (props) => {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    const BalanceModal = ({ visible, onClose }) => {
+        const [amount, setAmount] = useState('');
+        const [password, setPassword] = useState('');
+    
+        const handleSubmit = async () => {
+            try {
+                
+                onClose(); // Ferme la modale après soumission
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        };
+    
+        return (
+            <Modal visible={visible} transparent >
+                <View style={viewAccountanciesDetailsStyles.modalContainer}>
+                        <Input placeholder="Amount" value={amount} onChangeText={(a)=>{setAmount(a)}}
+                                inputMode='numeric'
+                                multiline={false}
+                                readOnly={false}
+                                maxLength={100}
+                                placeholderTextColor={appColors.secondaryColor3}
+                                inputStyle = {[searchBarStyles.inputText, ]}
+                                onFocus={() => setAmountFocused(true)}
+                                onBlur={() => setAmountFocused(false)}
+                                underlineColorAndroid='transparent'
+                                containerStyle={ [viewAccountanciesDetailsStyles.containerBox,]}
+                                inputContainerStyle = {[searchBarStyles.inputContainer, amountFocused && searchBarStyles.inputContainerFocused,  viewAccountanciesDetailsStyles.inputContainer,
+                                ]}
+                        />
+                     <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{setAdminPassword(pwd)}}
+                        multiline={false}
+                        numberOfLines={1}
+                        placeholderTextColor={appColors.lightWhite}
+                        inputStyle = {[searchBarStyles.inputText,]}
+                        onFocus={() => setAdminPasswordFocused(true)}
+                        onBlur={() => setAdminPasswordFocused(false)}
+                        underlineColorAndroid='transparent'
+                        containerStyle={ [viewAccountanciesDetailsStyles.containerBox,]}
+                        inputContainerStyle = {[searchBarStyles.inputContainer, adminPasswordFocused && searchBarStyles.inputContainerFocused,  viewAccountanciesDetailsStyles.inputContainer,]}
+                        
+                        rightIcon = {
+                            adminPasswordShowed ?
+                                <Pressable onPress={()=>{setAdminPasswordShowed(false)}}>
+                                    <Icon type="ionicon" name="eye-off-outline" size={24} color={appColors.gray} />
+                                </Pressable>
+                            :
+                            <Pressable onPress={()=>{setAdminPasswordShowed(true)}}>
+                                    <Icon type="ionicon" name="eye-outline" size={24} color={appColors.secondaryColor1} />
+                                </Pressable>
+                        }
+                        value={adminPassword}
+                        secureTextEntry={!adminPasswordShowed}
+                    /> 
+                    <Button title="Envoyer" onPress={handleSubmit} />
+                </View>
+            </Modal>
+        );
+    };
+
     return (
         <ScrollView horizontal={true} contentContainerStyle={[viewAccountanciesDetailsStyles.container]}>
 
@@ -261,7 +344,32 @@ const ViewAccountanciesDetails = (props) => {
 
             
 
+            <View style={{height:5}}></View>
+                <View style={[{flexDirection:'row', justifyContent:'space-around', width:'100%'}]}>
+
+                   <View style={[{flexDirection:'row'}]}>
+                       <Pressable>
+                           <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20}]}>Balance : </Text>
+                       </Pressable>
        
+                       <Pressable>
+                           <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20,fontWeight:'bold', color:accounter.cashBalance<0?'red':appColors.green}]}>{accounter.cashBalance} XAF</Text>
+                       </Pressable>
+                   </View>
+
+                    <View style={{width:10}}></View>
+
+
+                    <View style={[viewAccountanciesDetailsStyles]}>
+                       <Pressable onPress={() => { setModalVisible(true)  }}>
+                           <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20}]}>Créditer</Text>
+                       </Pressable>
+                       <BalanceModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+                   </View>
+
+                </View>
+                   <View style={{height:10}}></View>
+
             <FlatList
                     data={accountancies}
                     renderItem={ ({item, index}) => { 
@@ -422,5 +530,24 @@ const viewAccountanciesDetailsStyles = StyleSheet.create({
     pressable :
     {
         padding : 20,
-    }
+    },
+
+
+
+ 
+        modalContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: appColors.black,
+            padding: 20,
+        },
+        input: {
+            width: '80%',
+            backgroundColor: 'white',
+            padding: 10,
+            marginBottom: 10,
+            borderRadius: 5,
+        },
+    
 })

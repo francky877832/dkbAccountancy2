@@ -327,6 +327,11 @@ const loginUser = async (email, username, password) => {
                             <RadioButton value="cashier" />
                             <Text>Cashier</Text>
                         </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                            <RadioButton value="auto-supplier" />
+                            <Text>Auto Supplier</Text>
+                        </View>
                     </View>
                 </RadioButton.Group>
             </View>
