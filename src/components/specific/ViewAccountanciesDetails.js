@@ -107,7 +107,8 @@ const ViewAccountanciesDetails = (props) => {
         //if(!(user.email===accounter.email && accounter.email==='comptabilite@dkbglobaltrader.net') )
         if(user.email==='comptabilite@dkbglobaltrader.net')
         {
-            return !(['comptabilite@dkbglobaltrader.net', 'benjamindzogang@dkbglobaltrader.net', 'ornelletsotezo@gmail.com'].includes(accounter.email))
+            //return !(['comptabilite@dkbglobaltrader.net', 'benjamindzogang@dkbglobaltrader.net', 'ornelletsotezo@gmail.com'].includes(accounter.email))
+            return true
         } 
         return false
     } 
