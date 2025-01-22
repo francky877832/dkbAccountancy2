@@ -9,7 +9,7 @@ import { CustomButton, CustomModalActivityIndicator } from '../common/CommonSimp
 import { appColors, customText} from '../../styles/commonStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { searchBarStyles } from '../../styles/searchBarStyles';
-import { formatMoney, getDate, showAlert } from '../../utils/commonAppFonctions'
+import { formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
 
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
 import { AccountancyContext } from '../../context/AccountancyContext';
@@ -34,8 +34,12 @@ const SupplyFunds = (props) => {
 
     const [amount, setAmount] = useState(0)
     const [availableReceipients, setAvailableReceipients] = useState([])
+        const [date, setDate] = useState(getDate())
+    
    
     const [amountFocused, setAmountFocused] = useState(false)
+    const [dateFocused, setDateFocused] = useState(false)
+    
 
     const [errors, setErrors] = useState({});
 
@@ -58,15 +62,21 @@ const SupplyFunds = (props) => {
             //console.log(selectedReceipients)
             //return
 
+            if(!isValidDate(date) || !!amount)
+            {
+                Alert.alert('Date Error', 'Entrez une date valide, au format JJ/MM/AA')
+                return;
+            }
+            console.log(user)
             const report = {
-                reason : !!supplyReason ? 'auto-supply '+supplyReason : 'Supply',
+                reason : user._id==selectedReceipients ? 'auto-supply '+supplyReason : 'Supply',
                 amount : parseInt(amount.split('.').join('')),
                 billNo : '/',
                 supplyTo : selectedReceipients, //id du receipient
-                type : !!supplyReason ? 'auto-income' :'income',
-                date : getDate()
+                type : user._id==selectedReceipients ? 'auto-income' :'income',
+                date : date //getDate()
             }
-            console.log(report)
+            //console.log(report)
             //return
             
             const res = await addUserDailyAccountancy(user, report)
@@ -213,6 +223,24 @@ const SupplyFunds = (props) => {
                             />
                     </>
                 }
+
+                
+                <>
+                <View style={{width:10,}}></View>
+                        <Input placeholder="Date de la transaction" value={date} onChangeText={(name)=>{setDate(name)}}
+                            inputMode='text'
+                            multiline={false}
+                            readOnly={false}
+                            maxLength={100}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle = {[searchBarStyles.inputText, ]}
+                            onFocus={() => setDateFocused(true)}
+                            onBlur={() => setDateFocused(false)}
+                            underlineColorAndroid='transparent'
+                            containerStyle={[supplyFundsStyles.inputBox]}
+                            inputContainerStyle = {[searchBarStyles.inputContainer, supplyReasonFocused && searchBarStyles.inputContainerFocused,  supplyFundsStyles.inputContainer]}
+                        />
+                </>
 
             <View style={{height:20}}></View>
 
