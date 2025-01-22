@@ -1,8 +1,10 @@
 import React, { useState, forwardRef, useRef, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, FlatList, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Button, Alert, ScrollView, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 import { Input, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
+import Modal from 'react-native-modal';
+
 
 import { appColors, customText, screenWidth } from '../../styles/commonStyles';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -25,19 +27,16 @@ const ViewAccountanciesDetails = (props) => {
     const navigation = useNavigation()
     const route = useRoute()
     const {accounter} = route.params
-    const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading, getSearchedAccountancies, deleteAccountancyRecord} = useContext(AccountancyContext)
+    const { fetchAccounters, fetchAccountancies, accounters, accountancies, isLoading, setIsLoading, getSearchedAccountancies, deleteAccountancyRecord,
+        updateAccounterBalance,
+            } = useContext(AccountancyContext)
     //On va afficher home en fonciton de admin role
     const { user } = useContext(UserContext)
 
     const [updateComponent, setUpdateComponent] = useState(false)
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [amount, setAmount] = useState(0)
-    const [adminPassword, setAdminPassword] = useState("")
 
-    const [amountFocused, setAmountFocused] = useState(false)
-    const [adminPasswordFocused, setAdminPasswordFocused] = useState(false)
-    const [adminPasswordShowed, setAdminPasswordShowed] = useState(false)
 
 
 
@@ -232,63 +231,133 @@ const ViewAccountanciesDetails = (props) => {
 
 
 
-    const BalanceModal = ({ visible, onClose }) => {
-        const [amount, setAmount] = useState('');
+    const BalanceModal = ({ visible, setVisible }) => {
         const [password, setPassword] = useState('');
+        const [amount, setAmount] = useState("")
+        const [adminPassword, setAdminPassword] = useState("")
+    
+        const [amountFocused, setAmountFocused] = useState(false)
+        const [adminPasswordFocused, setAdminPasswordFocused] = useState(false)
+        const [adminPasswordShowed, setAdminPasswordShowed] = useState(false)
     
         const handleSubmit = async () => {
-            try {
+        try
+        {
+            setIsPostLoading(true)
+
+            //console.log("okkkkk")
+            //console.log(selectedReceipients)
+            //return
+            if(adminPassword!='dkbadmin')
+            {
+                const alertDatas = {
+                    title : 'Alerte',
+                    text : 'Mot de passe Admin incorrect',
+                    icon : 'Error',
+                    action : function(){},
+                }
+    
+                showAlert(alertDatas)
                 
-                onClose(); // Ferme la modale après soumission
-            } catch (error) {
-                console.error('Erreur:', error);
+                return;
             }
-        };
+
+            const datas = {
+                amount : parseInt(amount.split('.').join('')),
+            }
+            
+            
+            const res = await updateAccounterBalance(accounter, datas)
+
+            console.log(datas)
+            if(!res)
+            {
+                throw new Error("Erreur lors de l'ajout du raport")
+            }
+           const alertDatas = {
+                title : 'Alerte',
+                text : 'Votre transaction a été effectuée avec success.',
+                icon : 'warning',
+                action : function(){},
+           }
+
+            showAlert(alertDatas)
+            
+
+        }
+        catch(error)
+        {
+            console.log(error)
+            //Alert.alert('Error', 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.')
+            const alertDatas = {
+                title : 'Erreur',
+                text : 'Verifier votre connexion a Internet. Si cela persiste contacter l\'admin.',
+                icon : 'warning',
+                action : function (){},
+           }
+        showAlert(alertDatas)
+
+        }finally {
+            setIsPostLoading(false)
+            setVisible(false)
+        }
+    }
     
         return (
-            <Modal visible={visible} transparent >
-                <View style={viewAccountanciesDetailsStyles.modalContainer}>
-                        <Input placeholder="Amount" value={amount} onChangeText={(a)=>{setAmount(a)}}
-                                inputMode='numeric'
-                                multiline={false}
-                                readOnly={false}
-                                maxLength={100}
-                                placeholderTextColor={appColors.secondaryColor3}
-                                inputStyle = {[searchBarStyles.inputText, ]}
-                                onFocus={() => setAmountFocused(true)}
-                                onBlur={() => setAmountFocused(false)}
-                                underlineColorAndroid='transparent'
-                                containerStyle={ [viewAccountanciesDetailsStyles.containerBox,]}
-                                inputContainerStyle = {[searchBarStyles.inputContainer, amountFocused && searchBarStyles.inputContainerFocused,  viewAccountanciesDetailsStyles.inputContainer,
-                                ]}
+            <Modal isVisible={visible} onBackdropPress={() => setVisible(false)} backdropOpacity={0.5} style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View style={[viewAccountanciesDetailsStyles.modalContainer]}>
+                    <Input placeholder="Amount"
+                            value={amount}
+                            onChangeText={(a) => setAmount(a)}
+                            inputMode="numeric"
+                            multiline={false}
+                            maxLength={100}
+                            placeholderTextColor={appColors.secondaryColor3}
+                            inputStyle={[searchBarStyles.inputText]}
+                            onFocus={() => setAmountFocused(true)}
+                            onBlur={() => setAmountFocused(false)}
+                            underlineColorAndroid="transparent"
+                            containerStyle={[viewAccountanciesDetailsStyles.containerBox]}
+                            inputContainerStyle={[
+                                searchBarStyles.inputContainer,
+                                amountFocused && searchBarStyles.inputContainerFocused,
+                                viewAccountanciesDetailsStyles.inputContainer,
+                            ]}
                         />
-                     <Input placeholder="Votre Mot De Passe" onChangeText={(pwd)=>{setAdminPassword(pwd)}}
-                        multiline={false}
-                        numberOfLines={1}
-                        placeholderTextColor={appColors.lightWhite}
-                        inputStyle = {[searchBarStyles.inputText,]}
-                        onFocus={() => setAdminPasswordFocused(true)}
-                        onBlur={() => setAdminPasswordFocused(false)}
-                        underlineColorAndroid='transparent'
-                        containerStyle={ [viewAccountanciesDetailsStyles.containerBox,]}
-                        inputContainerStyle = {[searchBarStyles.inputContainer, adminPasswordFocused && searchBarStyles.inputContainerFocused,  viewAccountanciesDetailsStyles.inputContainer,]}
-                        
-                        rightIcon = {
-                            adminPasswordShowed ?
-                                <Pressable onPress={()=>{setAdminPasswordShowed(false)}}>
-                                    <Icon type="ionicon" name="eye-off-outline" size={24} color={appColors.gray} />
-                                </Pressable>
-                            :
-                            <Pressable onPress={()=>{setAdminPasswordShowed(true)}}>
-                                    <Icon type="ionicon" name="eye-outline" size={24} color={appColors.secondaryColor1} />
-                                </Pressable>
-                        }
-                        value={adminPassword}
-                        secureTextEntry={!adminPasswordShowed}
-                    /> 
+                        <Input
+                            placeholder="Votre Mot De Passe"
+                            onChangeText={(pwd) => {setAdminPassword(pwd)}}
+                            multiline={false}
+                            numberOfLines={1}
+                            placeholderTextColor={appColors.lightWhite}
+                            inputStyle={[searchBarStyles.inputText]}
+                            onFocus={() => setAdminPasswordFocused(true)}
+                            onBlur={() => setAdminPasswordFocused(false)}
+                            underlineColorAndroid="transparent"
+                            containerStyle={[viewAccountanciesDetailsStyles.containerBox]}
+                            inputContainerStyle={[
+                                searchBarStyles.inputContainer,
+                                adminPasswordFocused && searchBarStyles.inputContainerFocused,
+                                viewAccountanciesDetailsStyles.inputContainer,
+                            ]}
+                            rightIcon={
+                                adminPasswordShowed ? (
+                                    <Pressable onPress={() => setAdminPasswordShowed(false)}>
+                                        <Icon type="ionicon" name="eye-off-outline" size={24} color={appColors.gray} />
+                                    </Pressable>
+                                ) : (
+                                    <Pressable onPress={() => setAdminPasswordShowed(true)}>
+                                        <Icon type="ionicon" name="eye-outline" size={24} color={appColors.secondaryColor1} />
+                                    </Pressable>
+                                )
+                            }
+                            value={adminPassword}
+                            secureTextEntry={!adminPasswordShowed}
+                        />
                     <Button title="Envoyer" onPress={handleSubmit} />
                 </View>
             </Modal>
+
         );
     };
 
@@ -360,12 +429,15 @@ const ViewAccountanciesDetails = (props) => {
                     <View style={{width:10}}></View>
 
 
+                {
+                    ['admin', 'boss'].includes(user.role) &&
                     <View style={[viewAccountanciesDetailsStyles]}>
                        <Pressable onPress={() => { setModalVisible(true)  }}>
                            <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20}]}>Créditer</Text>
                        </Pressable>
-                       <BalanceModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+                       <BalanceModal visible={modalVisible} setVisible={setModalVisible} />
                    </View>
+                }
 
                 </View>
                    <View style={{height:10}}></View>
@@ -536,11 +608,10 @@ const viewAccountanciesDetailsStyles = StyleSheet.create({
 
  
         modalContainer: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: appColors.black,
+            width: '80%',
+            backgroundColor: 'white',
             padding: 20,
+            borderRadius: 10
         },
         input: {
             width: '80%',

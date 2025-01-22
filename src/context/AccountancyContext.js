@@ -141,6 +141,36 @@ const AccountancyProvider = ({children}) => {
     }
 
 
+    const updateAccounterBalance = async (user, datas) => {
+        // console.log("okkkkk")
+         //return;
+         try {
+             
+             const response = await fetch(`${server}/api/datas/accountancy//updateBalance/${encodeURIComponent(user._id)}`, {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify(datas), 
+             });
+     
+             // Vérification si la requête a réussi
+             if (!response.ok) {
+                 const errorData = await response.text();
+                throw new Error(errorData);
+             }
+             //console.log(updatedFormData)
+             
+             const responseData = await response.json();
+ 
+             return responseData.datas
+         } catch (error) {
+             console.error('Erreur lors de la requête:', error);
+             return false
+         }
+     }
+
+
     const fetchAccounters = async () => {
         try {
             setIsLoading(true)
@@ -182,7 +212,7 @@ const AccountancyProvider = ({children}) => {
 
     const filterStateVars = {accounters, accountancies, isLoading}
     const filterStateSetters = {setAccounters, setIsLoading}
-    const utilsFunctions = {deleteAccountancyRecord, fetchAccountancies, getSearchedAccountancies, addUserDailyAccountancy, fetchAccounters}
+    const utilsFunctions = {deleteAccountancyRecord, fetchAccountancies, getSearchedAccountancies, addUserDailyAccountancy, fetchAccounters, updateAccounterBalance}
     return (
         <AccountancyContext.Provider value={{...filterStateVars, ...filterStateSetters, ...utilsFunctions}}>
             {children}
