@@ -62,7 +62,7 @@ const SupplyFunds = (props) => {
             //console.log(selectedReceipients)
             //return
 
-            if(!isValidDate(date) || !!amount)
+            if(!isValidDate(date) || !amount)
             {
                 Alert.alert('Date Error', 'Entrez une date valide, au format JJ/MM/AA')
                 return;
@@ -129,8 +129,13 @@ const SupplyFunds = (props) => {
         {
             //console.log("Okkkkk")
             tmp = [user,]
-            //tmp = accounters.filter(el => getUsername(el.email) == 'admin')
-            //console.log(tmp)
+            let tmp_user = []
+            if(username=='yemornel')
+            {
+                tmp_user = accounters.filter(el => getUsername(el.email) == 'comptabilite')
+                tmp = [...tmp, ...tmp_user]
+            }
+
         }
         else if(username=='admin')
         {
@@ -138,7 +143,7 @@ const SupplyFunds = (props) => {
         }
         else if(username=='comptabilite')
         {
-            tmp = accounters.filter(el => ['kennevarelle9', 'stessydkbglobal', 'dorisndokon3'].includes(getUsername(el.email)))
+            tmp = accounters.filter(el => ['kennevarelle9', 'stessydkbglobal', 'dorisndokon3', 'yemornel', 'ornelletsotezo'].includes(getUsername(el.email)))
         }
         //console.log(tmp)
         return tmp
