@@ -278,7 +278,7 @@ const ViewAccountanciesDetails = (props) => {
                 title : 'Alerte',
                 text : 'Votre transaction a été effectuée avec success.',
                 icon : 'warning',
-                action : function(){},
+                action : function(){navigation.navigate('Home')},
            }
 
             showAlert(alertDatas)
