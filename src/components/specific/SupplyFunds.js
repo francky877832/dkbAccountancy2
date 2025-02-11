@@ -145,6 +145,11 @@ const SupplyFunds = (props) => {
         {
             tmp = accounters.filter(el => ['kennevarelle9', 'stessydkbglobal', 'dorisndokon3', 'yemornel', 'ornelletsotezo'].includes(getUsername(el.email)))
         }
+        else if(username=='ornelletsotezo')
+        {
+            tmp = accounters.filter(el => getUsername(el.email) != username)
+
+        }
         //console.log(tmp)
         return tmp
     }

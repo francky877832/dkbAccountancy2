@@ -126,6 +126,7 @@ const ViewAccountanciesDetails = (props) => {
 
        let backgroundColor = ""
        let sign = '+'
+       let balance = item.cashBalance
        if(item?.type=='income')
        {    if(item?.user._id==accounter._id)
             {
@@ -137,6 +138,16 @@ const ViewAccountanciesDetails = (props) => {
                 backgroundColor = appColors.lightGreen
                 sign = '+'
             }
+            
+
+            if(item?.user._id==accounter._id) //on est dans le compte de celui qui a fait supply
+            {
+                balance = item.cashBalance
+            }
+            else
+            {
+                balance = item.supplyCashBalance
+            }
        }
        else  if(item?.type=='auto-income')
        {
@@ -146,7 +157,7 @@ const ViewAccountanciesDetails = (props) => {
        else
        {
             backgroundColor = appColors.lightRed 
-            sign = '+'
+            sign = '-'
        }
 
 
@@ -182,7 +193,7 @@ const ViewAccountanciesDetails = (props) => {
                         <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=="income" ? (item?.user._id==accounter._id) ? getUsername(item?.supplyTo.email) : getUsername(item?.user.email) : item?.billNo}</Text>
                     </View>
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.type=="income" ? (item?.user._id==accounter._id) ? item?.cashBalance : item?.supplyCashBalance : item?.cashBalance}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{balance}</Text>
                     </View>
                 </Pressable>
                 
@@ -431,7 +442,7 @@ const ViewAccountanciesDetails = (props) => {
 
 
                 {
-                    ['admin', 'boss'].includes(user.role) &&
+                    ['visualizer', 'boss'].includes(user.role) &&
                     <View style={[viewAccountanciesDetailsStyles]}>
                        <Pressable onPress={() => { setModalVisible(true)  }}>
                            <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20}]}>Créditer</Text>

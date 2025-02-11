@@ -16,4 +16,3 @@ firebase deploy
 remote url server
 
 
-euıüaioöEUIÜAİOÖ
