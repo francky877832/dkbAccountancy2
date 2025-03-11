@@ -5,8 +5,8 @@ export const storeUrl = 'https://play.google.com/store/apps/details?id=com.jira8
 
 
 //export const server = 'https://jirashoppingbackend.onrender.com'
-//export const server = 'http://192.168.56.1:3000' // 192.168.56.1
-export const server = 'https://dkbbackend.onrender.com'
+export const server = 'http://192.168.56.1:3000' // 192.168.56.1
+//export const server = 'https://dkbbackend.onrender.com'
 
 
 //export const server = 'https://jirashopping-25ee1eaa49ff.herokuapp.com'
