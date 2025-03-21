@@ -67,7 +67,7 @@ const SupplyFunds = (props) => {
                 Alert.alert('Date Error', 'Entrez une date valide, au format JJ/MM/AA')
                 return;
             }
-            console.log(user)
+            //console.log(user)
             const report = {
                 reason : user._id==selectedReceipients ? 'auto-supply '+supplyReason : 'Supply',
                 amount : parseInt(amount.split('.').join('')),
@@ -237,7 +237,7 @@ const SupplyFunds = (props) => {
                 
                 <>
                 <View style={{width:10,}}></View>
-                        <Input placeholder="Date de la transaction" value={date} onChangeText={(name)=>{setDate(name)}}
+                        <Input placeholder="Date de la transaction AAAA-MM-JJ" value={date} onChangeText={(name)=>{setDate(name)}}
                             inputMode='text'
                             multiline={false}
                             readOnly={false}

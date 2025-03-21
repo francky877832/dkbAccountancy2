@@ -15,7 +15,7 @@ import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpl
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
 import { homeStyles } from '../../styles/homeStyles';
-import { formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
+import { formatDate, formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
 import { cardContainer } from '../user/userLoginStyles';
 import { UserContext } from '../../context/UserContext';
 import { userLoginStyles } from '../user/userLoginStyles';
@@ -174,7 +174,7 @@ const ViewAccountanciesDetails = (props) => {
                     }
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
-                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{item?.date}</Text>
+                        <Text style={[viewAccountanciesDetailsStyles.recordItemText]}>{formatDate(item?.date) || item?.date}</Text>
                     </View>
 
                     <View style={[viewAccountanciesDetailsStyles.cell]}>
@@ -215,7 +215,7 @@ const ViewAccountanciesDetails = (props) => {
 
             if(!isValidDate(date_))
             {
-                Alert.alert('Date Error', 'Entrez une date valide, au format JJ pour day et JJ/MM pour month')
+                Alert.alert('Date Error', 'Entrez une date valide, au format JJ pour day et JJ-MM pour month')
                 return;
             }
             

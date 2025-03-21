@@ -394,6 +394,20 @@ export const formatDateToLitteral = (dateString) =>  {
     return `${jour} ${capitalizeFirstLetter(mois[date.getMonth()])} ${annee}`;
 }
 
+export const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois commencent à 0
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    //return `${day}/${month}/${year} - ${hours}H${minutes}`;
+    return new Date(dateString).toLocaleString()
+};
+
+
+
 export const convertISOToCustomDateFormat = (isoDateString) => {
     const date = new Date(isoDateString);
 
@@ -533,20 +547,20 @@ export  const getFirebaseErrorMessage = (errorCode) => {
     }
 };
 
-export  const getDate = () => {
+export const getDate = () => {
     const today = new Date();
 
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
-    const year = String(today.getFullYear()).slice(-2);
+    const year = today.getFullYear(); // 4 chiffres
 
-    const formattedDate = `${day}/${month}/${year}`;
-    return formattedDate
-}
+    return `${year}-${month}-${day}`;
+};
+
 
 export  const isValidDate = (date) => {
 
-    return date.split('/').length === 3
+    return date.split('-').length === 3
 }
 
 import Swal from 'sweetalert2';
