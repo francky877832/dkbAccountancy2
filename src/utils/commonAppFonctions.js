@@ -554,7 +554,7 @@ export const getDate = () => {
     const day = String(today.getDate()).padStart(2, '0');
     const year = today.getFullYear(); // 4 chiffres
 
-    return `${year}-${month}-${day}`;
+    return `${day}-${month}-${year}`;
 };
 
 

@@ -237,7 +237,7 @@ const SupplyFunds = (props) => {
                 
                 <>
                 <View style={{width:10,}}></View>
-                        <Input placeholder="Date de la transaction AAAA-MM-JJ" value={date} onChangeText={(name)=>{setDate(name)}}
+                        <Input placeholder="Date de la transaction JJ-MM-AAAA" value={date} onChangeText={(name)=>{setDate(name)}}
                             inputMode='text'
                             multiline={false}
                             readOnly={false}
