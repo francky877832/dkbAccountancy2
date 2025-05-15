@@ -121,9 +121,9 @@ const SupplyFunds = (props) => {
         const accounters_ = accounters
         const username = getUsername(user.email)
         let tmp = []
-        if(user.role=='boss')
+        if(user.role=='boss') 
         {
-            tmp = accounters.filter(el => getUsername(el.email) == 'admin')
+            tmp = accounters.filter(el => ['caisseboss', 'helenedogmo'].includes(getUsername(el.email)))
         }
         else if(user.role=='auto-supplier')
         {
@@ -136,6 +136,11 @@ const SupplyFunds = (props) => {
                 tmp = [...tmp, ...tmp_user]
             }
 
+        }
+        else if(username=='helenedogmo') //has been updated
+        {
+            tmp_user = accounters.filter(el => ['kennevarelle9', 'dorisndokon3'].includes(getUsername(el.email)))
+            tmp = [...tmp, ...tmp_user]
         }
         else if(username=='admin')
         {
