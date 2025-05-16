@@ -15,7 +15,7 @@ import { CustomButton, CustomModalActivityIndicator} from '../common/CommonSimpl
 import { searchBarStyles } from '../../styles/searchBarStyles';
 import { addAccountancyStyles } from '../../styles/addAccountancyStyles';
 import { homeStyles } from '../../styles/homeStyles';
-import { formatDate, formatMoney, getDate, isValidDate, showAlert } from '../../utils/commonAppFonctions'
+import { buildExcelData, exportToExcelWeb, formatDate, formatMoney, getDate, getUsername, isValidDate, showAlert } from '../../utils/commonAppFonctions'
 import { cardContainer } from '../user/userLoginStyles';
 import { UserContext } from '../../context/UserContext';
 import { userLoginStyles } from '../user/userLoginStyles';
@@ -50,9 +50,7 @@ const ViewAccountanciesDetails = (props) => {
 
     
 
-    const getUsername = (email) => {
-        return email.split('@')[0].slice(0, 10);
-    }
+
 
     const handleDeletePressed = async (item) => {
        
@@ -314,6 +312,7 @@ const ViewAccountanciesDetails = (props) => {
             setVisible(false)
         }
     }
+   // console.log(accountancies)
     
         return (
             <Modal isVisible={visible} onBackdropPress={() => setVisible(false)} backdropOpacity={0.5} style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -372,6 +371,9 @@ const ViewAccountanciesDetails = (props) => {
 
         );
     };
+
+
+
 
     return (
         <ScrollView horizontal={true} contentContainerStyle={[viewAccountanciesDetailsStyles.container]}>
@@ -437,6 +439,10 @@ const ViewAccountanciesDetails = (props) => {
                            <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20,fontWeight:'bold', color:accounter.cashBalance<0?'red':appColors.green}]}>{accounter.cashBalance} XAF</Text>
                        </Pressable>
                    </View>
+
+                   <Pressable onPress={() => { exportToExcelWeb(buildExcelData(accountancies, accounter, getUsername, formatDate, appColors), getUsername(accounter.email))}}>
+                           <Text style={[customText.text, homeStyles.menuItemText, {fontSize:20}]}>Export Excel</Text>
+                       </Pressable>
 
                     <View style={{width:10}}></View>
 

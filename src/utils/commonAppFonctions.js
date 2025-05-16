@@ -3,6 +3,82 @@ const Fuse = require('fuse.js');
 import { Linking, Share, Alert, Platform} from 'react-native';
 
  
+import * as XLSX from 'xlsx';
+
+
+ export const getUsername = (email) => {
+        return email.split('@')[0].slice(0, 10);
+    }
+export const exportToExcelWeb = (data, username) => {
+  // 1. Convert JSON to worksheet
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  // 2. Write workbook to binary string
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+  // 3. Create a Blob
+  const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+  // 4. Trigger download
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = username+'.xlsx';
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+};
+
+export const buildExcelData = (items, accounter, getUsername, formatDate, appColors) => {
+  return items.map((item) => {
+    let sign = '+';
+    let balance = item.cashBalance;
+    let backgroundColor = appColors.lightRed;
+
+    if (item?.type === 'income') {
+      if (item?.user._id === accounter._id) {
+        backgroundColor = appColors.lightRed;
+        sign = '-';
+        balance = item.cashBalance;
+      } else {
+        backgroundColor = appColors.lightGreen;
+        sign = '+';
+        balance = item.supplyCashBalance;
+      }
+    } else if (item?.type === 'auto-income') {
+      backgroundColor = appColors.orange;
+      sign = '+';
+    } else {
+      backgroundColor = appColors.lightRed;
+      sign = '-';
+    }
+
+    return {
+      Date: formatDate(item?.date) || item?.date,
+      Reason: item?.reason,
+      Amount: `${sign} ${item?.amount}`,
+      ReceivedBy:
+        item?.type === 'outcome'
+          ? item?.receivedBy
+          : getUsername(item?.supplyTo?.email),
+      Detail:
+        item?.type === 'income'
+          ? (item?.user._id === accounter._id
+              ? getUsername(item?.supplyTo?.email)
+              : getUsername(item?.user?.email))
+          : item?.billNo,
+      Balance: balance,
+      Background: backgroundColor, 
+    updatedAt : formatDate(item.updatedAt) || item.updatedAt,
+    createdAt : formatDate(item.createdAt) || item.createdAt
+    }
+    });
+};
+
+
+
 
 export const handleSharePress = async (link) => {
     if (!link) {
