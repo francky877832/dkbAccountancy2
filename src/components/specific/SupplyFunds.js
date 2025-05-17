@@ -139,8 +139,9 @@ const SupplyFunds = (props) => {
         }
         else if(username=='helenedogmo') //has been updated
         {
-            tmp_user = accounters.filter(el => ['kennevarelle9', 'dorisndokon3'].includes(getUsername(el.email)))
-            tmp = [...tmp, ...tmp_user]
+            //let tmp_user = []
+            tmp = accounters.filter(el => ['kennevarelle9', 'dorisndokon3'].includes(getUsername(el.email)))
+            //tmp = [...tmp, ...tmp_user]
         }
         else if(username=='admin')
         {
@@ -148,7 +149,7 @@ const SupplyFunds = (props) => {
         }
         else if(username=='comptabilite')
         {
-            tmp = accounters.filter(el => ['helenedogmo', 'kennevarelle9', 'stessydkbglobal', 'dorisndokon3', 'yemornel', 'ornelletsotezo'].includes(getUsername(el.email)))
+            tmp = accounters.filter(el => ['helenedogmo', 'caisseboss', 'kennevarelle9', 'stessydkbglobal', 'dorisndokon3', 'yemornel', 'ornelletsotezo'].includes(getUsername(el.email)))
         }
         else if(username=='ornelletsotezo')
         {
